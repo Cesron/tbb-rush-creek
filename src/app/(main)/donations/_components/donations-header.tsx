@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function DonationsHeader() {
@@ -34,8 +33,6 @@ export function DonationsHeader() {
           </Breadcrumb>
         </div>
       </div>
-
-      <Button>Do something</Button>
     </header>
   );
 }
