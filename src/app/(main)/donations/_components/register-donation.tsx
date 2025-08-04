@@ -26,10 +26,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { currencyFormat } from "@/utils/currency-format";
-import { ChurchIcon, CoinsIcon, PiggyBankIcon, UsersIcon } from "lucide-react";
-import { useRegisterDonation } from "../_hooks/use-register-donation";
 import { Textarea } from "@/components/ui/textarea";
+import { currencyFormat } from "@/utils/currency-format";
+import {
+  BanknoteIcon,
+  ChurchIcon,
+  CoinsIcon,
+  PiggyBankIcon,
+  UsersIcon,
+} from "lucide-react";
+import { useRegisterDonation } from "../_hooks/use-register-donation";
 import { DifferenceMessage } from "./difference-message";
 
 export function RegisterDonation() {
@@ -628,7 +634,7 @@ export function RegisterDonation() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CoinsIcon className="h-5 w-5" />
+              <BanknoteIcon className="h-5 w-5" />
               Desglose de Billetes:{" "}
               <span className="font-semibold font-mono">
                 {currencyFormat(totalBills)}
