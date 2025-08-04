@@ -2,6 +2,31 @@ import { useForm } from "react-hook-form";
 import { Donation, donationSchema } from "../_lib/donations-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+function getDefaultServiceType(): string {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const hour = now.getHours();
+
+  switch (dayOfWeek) {
+    case 0:
+      return hour < 15 ? "sundayServiceAM" : "sundayServicePM";
+    case 1:
+      return "mondayService";
+    case 2:
+      return "tuesdayService";
+    case 3:
+      return "wednesdayService";
+    case 4:
+      return "thursdayService";
+    case 5:
+      return "fridayService";
+    case 6:
+      return "saturdayService";
+    default:
+      return "sundayServiceAM";
+  }
+}
+
 export function useRegisterDonation() {
   const form = useForm<Donation>({
     resolver: zodResolver(donationSchema),
@@ -9,6 +34,8 @@ export function useRegisterDonation() {
       serviceDate: new Date().toISOString().slice(0, 10),
       sermonTopic: "",
       preacher: "",
+      serviceType: getDefaultServiceType(),
+      serviceDescription: "",
       childrenAttendance: "",
       adultAttendance: "",
       templeServers: "",

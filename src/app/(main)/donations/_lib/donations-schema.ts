@@ -2,61 +2,34 @@ import { z } from "zod";
 
 export const donationSchema = z.object({
   serviceDate: z.string().min(1, "Por favor, ingrese la fecha del servicio"),
+  serviceType: z.string().min(1, "Por favor, seleccione el tipo de servicio"),
   sermonTopic: z
     .string()
     .min(1, "Por favor, ingrese el tema de la predicación"),
   preacher: z.string().min(1, "Por favor, ingrese el nombre del predicador"),
-  childrenAttendance: z
-    .string()
-    .min(1, "Por favor, ingrese la asistencia de niños"),
-  adultAttendance: z
-    .string()
-    .min(1, "Por favor, ingrese la asistencia de adultos"),
-  templeServers: z
-    .string()
-    .min(1, "Por favor, ingrese el número de servidores del templo"),
-  bibleSchoolServers: z
-    .string()
-    .min(1, "Por favor, ingrese el número de servidores de escuela bíblica"),
+  serviceDescription: z.string(),
 
-  totalOfferings: z.string().min(1, "Por favor, ingrese el total de ofrendas"),
-  totalTithes: z.string().min(1, "Por favor, ingrese el total de diezmos"),
-  otherIncome: z.string().min(1, "Por favor, ingrese otros ingresos"),
+  childrenAttendance: z.string().optional(),
+  adultAttendance: z.string().optional(),
+  templeServers: z.string().optional(),
+  bibleSchoolServers: z.string().optional(),
 
-  coins_001: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de monedas de $0.01"),
-  coins_005: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de monedas de $0.05"),
-  coins_010: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de monedas de $0.10"),
-  coins_025: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de monedas de $0.25"),
-  coins_100: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de monedas de $1.00"),
+  totalOfferings: z.string().optional(),
+  totalTithes: z.string().optional(),
+  otherIncome: z.string().optional(),
 
-  bills_001: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de billetes de $1.00"),
-  bills_005: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de billetes de $5.00"),
-  bills_010: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de billetes de $10.00"),
-  bills_020: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de billetes de $20.00"),
-  bills_050: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de billetes de $50.00"),
-  bills_100: z
-    .string()
-    .min(1, "Por favor, ingrese la cantidad de billetes de $100.00"),
+  coins_001: z.string().optional(),
+  coins_005: z.string().optional(),
+  coins_010: z.string().optional(),
+  coins_025: z.string().optional(),
+  coins_100: z.string().optional(),
+
+  bills_001: z.string().optional(),
+  bills_005: z.string().optional(),
+  bills_010: z.string().optional(),
+  bills_020: z.string().optional(),
+  bills_050: z.string().optional(),
+  bills_100: z.string().optional(),
 });
 
 export type Donation = z.infer<typeof donationSchema>;
