@@ -457,11 +457,11 @@ export function RegisterDonation() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Denominación</TableHead>
+                  <TableHead className="w-[120px]">Denominación</TableHead>
                   <TableHead className="w-[150px] text-center">
                     Cantidad
                   </TableHead>
-                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="w-[120px] text-right">Total</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -633,11 +633,11 @@ export function RegisterDonation() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Denominación</TableHead>
+                  <TableHead className="w-[120px]">Denominación</TableHead>
                   <TableHead className="w-[150px] text-center">
                     Cantidad
                   </TableHead>
-                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="w-[120px] text-right">Total</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
