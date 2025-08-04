@@ -344,7 +344,13 @@ export function RegisterDonation() {
                 <FormItem>
                   <FormLabel>Servidores de la Escuela Bíblica</FormLabel>
                   <FormControl>
-                    <Input placeholder="0" {...field} />
+                    <Input
+                      type="number"
+                      min={0}
+                      step={1}
+                      placeholder="0"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
