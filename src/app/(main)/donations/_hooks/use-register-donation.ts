@@ -54,6 +54,7 @@ export function useRegisterDonation() {
       bills_020: "",
       bills_050: "",
       bills_100: "",
+      tithesDetail: [],
     },
   });
 

@@ -30,6 +30,13 @@ export const donationSchema = z.object({
   bills_020: z.string().optional(),
   bills_050: z.string().optional(),
   bills_100: z.string().optional(),
+
+  tithesDetail: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.string(),
+    })
+  ),
 });
 
 export type Donation = z.infer<typeof donationSchema>;
