@@ -61,15 +61,15 @@ export function RemittancesDetailSection({
       </CardHeader>
       <CardContent className="space-y-4">
         {remittancesDetail.length === 0 ? (
-          <div className="text-center py-8">
-            <MailOpenIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+          <div className="text-center py-4">
+            <MailOpenIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <h3 className="text-base font-medium text-muted-foreground mb-1">
               No hay remesas registradas
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-xs text-muted-foreground mb-3">
               Agrega las transferencias bancarias recibidas.
             </p>
-            <Button variant="outline" onClick={openAddDialog}>
+            <Button variant="outline" size="sm" onClick={openAddDialog}>
               Agregar Primera Remesa
             </Button>
           </div>
