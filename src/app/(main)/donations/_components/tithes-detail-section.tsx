@@ -4,19 +4,6 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { FormLabel } from "@/components/ui/form";
-import {
   Table,
   TableBody,
   TableCell,
@@ -29,15 +16,15 @@ import { MailIcon, MailOpenIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 import { TitheDifferenceMessage } from "./tithe-difference-message";
+import { AddTitheDialog } from "./add-tithe-dialog";
+import { EditTitheDialog } from "./edit-tithe-dialog";
 
 interface TithesDetailSectionProps {
   form: UseFormReturn<Donation>;
 }
 
 export function TithesDetailSection({ form }: TithesDetailSectionProps) {
-  const [newTitheName, setNewTitheName] = useState("");
-  const [newTitheAmount, setNewTitheAmount] = useState("");
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const totalTithes = parseFloat((form.watch("totalTithes") as string) || "0");
   const tithesDetail = form.watch("tithesDetail") || [];
@@ -47,47 +34,8 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
   );
   const tithesDifference = totalTithesDetail - totalTithes;
 
-  const handleAddTithe = () => {
-    if (
-      !newTitheName.trim() ||
-      !newTitheAmount ||
-      parseFloat(newTitheAmount) <= 0
-    ) {
-      return;
-    }
-
-    const currentTithes = form.getValues("tithesDetail") || [];
-    const newTithe = {
-      name: newTitheName.trim(),
-      amount: newTitheAmount,
-    };
-
-    form.setValue("tithesDetail", [...currentTithes, newTithe]);
-    setNewTitheName("");
-    setNewTitheAmount("");
-  };
-
-  const handleEditTithe = () => {
-    if (
-      editingIndex === null ||
-      !newTitheName.trim() ||
-      !newTitheAmount ||
-      parseFloat(newTitheAmount) <= 0
-    ) {
-      return;
-    }
-
-    const currentTithes = form.getValues("tithesDetail") || [];
-    const updatedTithes = [...currentTithes];
-    updatedTithes[editingIndex] = {
-      name: newTitheName.trim(),
-      amount: newTitheAmount,
-    };
-
-    form.setValue("tithesDetail", updatedTithes);
-    setEditingIndex(null);
-    setNewTitheName("");
-    setNewTitheAmount("");
+  const openAddDialog = () => {
+    setIsAddDialogOpen(true);
   };
 
   const handleDeleteTithe = (index: number) => {
@@ -108,81 +56,9 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
         </CardTitle>
         {form.watch("tithesDetail") &&
           form.watch("tithesDetail").length > 0 && (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Agregar Diezmo
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Agregar Diezmo</DialogTitle>
-                  <DialogDescription>
-                    Ingrese los detalles del diezmo a registrar
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="grid gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="tithePersonName">
-                      Nombre de la persona
-                    </Label>
-                    <Input
-                      id="tithePersonName"
-                      placeholder="Escriba el nombre..."
-                      onChange={(e) => setNewTitheName(e.target.value)}
-                      value={newTitheName}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="titheAmount">Cantidad</Label>
-                    <div className="relative">
-                      <Input
-                        id="titheAmount"
-                        type="number"
-                        min={0}
-                        step="0.01"
-                        placeholder="0.00"
-                        className="peer ps-6"
-                        onChange={(e) => setNewTitheAmount(e.target.value)}
-                        value={newTitheAmount}
-                      />
-                      <span className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-sm peer-disabled:opacity-50">
-                        $
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setNewTitheName("");
-                        setNewTitheAmount("");
-                      }}
-                    >
-                      Cancelar
-                    </Button>
-                  </DialogClose>
-                  <DialogClose asChild>
-                    <Button
-                      type="button"
-                      onClick={handleAddTithe}
-                      disabled={
-                        !newTitheName.trim() ||
-                        !newTitheAmount ||
-                        parseFloat(newTitheAmount) <= 0
-                      }
-                    >
-                      Agregar Diezmo
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <Button variant="outline" size="sm" onClick={openAddDialog}>
+              Agregar Diezmo
+            </Button>
           )}
       </CardHeader>
       <CardContent className="space-y-4">
@@ -196,78 +72,9 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
             <p className="text-sm text-muted-foreground mb-4">
               Agregue los detalles de los diezmos recibidos durante el servicio
             </p>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">Agregar Primer Diezmo</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Agregar Diezmo</DialogTitle>
-                  <DialogDescription>
-                    Ingrese los detalles del diezmo a registrar
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="tithePersonName">
-                      Nombre de la persona
-                    </Label>
-                    <Input
-                      id="tithePersonName"
-                      placeholder="Escriba el nombre..."
-                      onChange={(e) => setNewTitheName(e.target.value)}
-                      value={newTitheName}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="titheAmount">Cantidad</Label>
-                    <div className="relative">
-                      <Input
-                        id="titheAmount"
-                        type="number"
-                        min={0}
-                        step="0.01"
-                        placeholder="0.00"
-                        className="peer ps-6"
-                        onChange={(e) => setNewTitheAmount(e.target.value)}
-                        value={newTitheAmount}
-                      />
-                      <span className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-sm peer-disabled:opacity-50">
-                        $
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setNewTitheName("");
-                        setNewTitheAmount("");
-                      }}
-                    >
-                      Cancelar
-                    </Button>
-                  </DialogClose>
-                  <DialogClose asChild>
-                    <Button
-                      type="button"
-                      onClick={handleAddTithe}
-                      disabled={
-                        !newTitheName.trim() ||
-                        !newTitheAmount ||
-                        parseFloat(newTitheAmount) <= 0
-                      }
-                    >
-                      Agregar Diezmo
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <Button variant="outline" onClick={openAddDialog}>
+              Agregar Primer Diezmo
+            </Button>
           </div>
         ) : (
           <Table>
@@ -287,95 +94,12 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingIndex(index);
-                              setNewTitheName(tithe.name);
-                              setNewTitheAmount(tithe.amount);
-                            }}
-                          >
-                            Editar
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>Editar Diezmo</DialogTitle>
-                            <DialogDescription>
-                              Modifique los detalles del diezmo
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <div className="space-y-4">
-                            <div>
-                              <FormLabel htmlFor="editTithePersonName">
-                                Nombre de la persona
-                              </FormLabel>
-                              <Input
-                                id="editTithePersonName"
-                                placeholder="Escriba el nombre..."
-                                onChange={(e) =>
-                                  setNewTitheName(e.target.value)
-                                }
-                                value={newTitheName}
-                              />
-                            </div>
-                            <div>
-                              <FormLabel htmlFor="editTitheAmount">
-                                Cantidad
-                              </FormLabel>
-                              <div className="relative">
-                                <Input
-                                  id="editTitheAmount"
-                                  type="number"
-                                  min={0}
-                                  step="0.01"
-                                  placeholder="0.00"
-                                  className="peer ps-6"
-                                  onChange={(e) =>
-                                    setNewTitheAmount(e.target.value)
-                                  }
-                                  value={newTitheAmount}
-                                />
-                                <span className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-sm peer-disabled:opacity-50">
-                                  $
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button
-                                variant="outline"
-                                onClick={() => {
-                                  setEditingIndex(null);
-                                  setNewTitheName("");
-                                  setNewTitheAmount("");
-                                }}
-                              >
-                                Cancelar
-                              </Button>
-                            </DialogClose>
-                            <DialogClose asChild>
-                              <Button
-                                type="button"
-                                onClick={handleEditTithe}
-                                disabled={
-                                  !newTitheName.trim() ||
-                                  !newTitheAmount ||
-                                  parseFloat(newTitheAmount) <= 0
-                                }
-                              >
-                                Guardar Cambios
-                              </Button>
-                            </DialogClose>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                      <EditTitheDialog
+                        form={form}
+                        tithe={tithe}
+                        index={index}
+                        onEdit={() => {}}
+                      />
                       <Button
                         variant="destructive"
                         size="sm"
@@ -410,6 +134,12 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
           currencyFormat={currencyFormat}
         />
       </CardContent>
+
+      <AddTitheDialog
+        form={form}
+        isOpen={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+      />
     </Card>
   );
 }
