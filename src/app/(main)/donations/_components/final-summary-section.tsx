@@ -67,7 +67,7 @@ export function FinalSummarySection({
   return (
     <Card className="my-4">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
           <CoinsIcon className="h-5 w-5" />
           Resumen Final de Donaciones
         </CardTitle>
@@ -76,81 +76,96 @@ export function FinalSummarySection({
           Finalizar registro
         </Button>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Categoría</TableHead>
-                <TableHead className="text-right">Monto</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Ofrendas</TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalOfferings)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Diezmos</TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalTithes)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-semibold">
-                  Total registrado
-                </TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalFinancial)}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Desgloce</TableHead>
-                <TableHead className="text-right">Monto</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Subtotal Monedas </TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalCoins)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Subtotal Billetes </TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalBills)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Remesas</TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalRemittances)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Cheques</TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalChecks)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-semibold">
-                  Total efectivo contado
-                </TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(totalCashCounted)}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+      <CardContent className="space-y-6">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Métodos y conteo físico primero */}
+          <div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Desgloce</TableHead>
+                  <TableHead className="text-right">Monto</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Subtotal Monedas</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalCoins)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Subtotal Billetes</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalBills)}
+                  </TableCell>
+                </TableRow>
+                <TableRow className="bg-muted/30">
+                  <TableCell className="font-medium">
+                    Total efectivo contado
+                  </TableCell>
+                  <TableCell className="text-right font-bold font-mono">
+                    {currencyFormat(totalCashCounted)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Remesas</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalRemittances)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Cheques</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalChecks)}
+                  </TableCell>
+                </TableRow>
+                <TableRow className="bg-muted/50">
+                  <TableCell className="font-semibold">
+                    Total desgloce
+                  </TableCell>
+                  <TableCell className="text-right font-bold font-mono">
+                    {currencyFormat(
+                      totalCashCounted + totalRemittances + totalChecks
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+          {/* Resumen financiero después */}
+          <div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Concepto</TableHead>
+                  <TableHead className="text-right">Monto</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="bg-muted/30">
+                  <TableCell className="font-medium">Ofrendas</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalOfferings)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Diezmos</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalTithes)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-semibold">
+                    Total registrado
+                  </TableCell>
+                  <TableCell className="text-right font-bold font-mono">
+                    {currencyFormat(totalFinancial)}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
         </div>
         <Separator className="my-4" />
       </CardContent>

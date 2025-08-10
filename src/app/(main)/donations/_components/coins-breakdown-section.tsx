@@ -89,7 +89,7 @@ export function CoinsBreakdownSection({ form }: CoinsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(coins001Total)}
               </TableCell>
             </TableRow>
@@ -117,7 +117,7 @@ export function CoinsBreakdownSection({ form }: CoinsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(coins005Total)}
               </TableCell>
             </TableRow>
@@ -145,7 +145,7 @@ export function CoinsBreakdownSection({ form }: CoinsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(coins010Total)}
               </TableCell>
             </TableRow>
@@ -173,7 +173,7 @@ export function CoinsBreakdownSection({ form }: CoinsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(coins025Total)}
               </TableCell>
             </TableRow>
@@ -201,7 +201,7 @@ export function CoinsBreakdownSection({ form }: CoinsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(coins100Total)}
               </TableCell>
             </TableRow>

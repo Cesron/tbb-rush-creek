@@ -96,7 +96,7 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
               {form.watch("tithesDetail").map((tithe, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{tithe.name}</TableCell>
-                  <TableCell className="text-right font-semibold font-mono">
+                  <TableCell className="text-right font-mono">
                     {currencyFormat(parseFloat(tithe.amount) || 0)}
                   </TableCell>
                   <TableCell className="text-right">

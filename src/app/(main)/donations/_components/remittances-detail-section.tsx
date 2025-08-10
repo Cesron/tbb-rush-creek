@@ -97,7 +97,7 @@ export function RemittancesDetailSection({
                 (r: { name: string; amount: string }, index: number) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{r.name}</TableCell>
-                    <TableCell className="text-right font-semibold font-mono">
+                    <TableCell className="text-right font-mono">
                       {currencyFormat(parseFloat(r.amount) || 0)}
                     </TableCell>
                     <TableCell className="text-right">

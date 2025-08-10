@@ -92,7 +92,7 @@ export function BillsBreakdownSection({ form }: BillsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(bills001Total)}
               </TableCell>
             </TableRow>
@@ -119,7 +119,7 @@ export function BillsBreakdownSection({ form }: BillsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(bills005Total)}
               </TableCell>
             </TableRow>
@@ -146,7 +146,7 @@ export function BillsBreakdownSection({ form }: BillsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(bills010Total)}
               </TableCell>
             </TableRow>
@@ -173,7 +173,7 @@ export function BillsBreakdownSection({ form }: BillsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(bills020Total)}
               </TableCell>
             </TableRow>
@@ -200,7 +200,7 @@ export function BillsBreakdownSection({ form }: BillsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(bills050Total)}
               </TableCell>
             </TableRow>
@@ -227,7 +227,7 @@ export function BillsBreakdownSection({ form }: BillsBreakdownSectionProps) {
                   )}
                 />
               </TableCell>
-              <TableCell className="text-right font-semibold font-mono">
+              <TableCell className="text-right font-mono">
                 {currencyFormat(bills100Total)}
               </TableCell>
             </TableRow>
