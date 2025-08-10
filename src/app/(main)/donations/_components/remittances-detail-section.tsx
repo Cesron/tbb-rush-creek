@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { currencyFormat } from "@/utils/currency-format";
-import { SendIcon, MailOpenIcon } from "lucide-react";
+import { SendIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 import { EditRemittanceDialog } from "./remittances/edit-remittance-dialog";
@@ -44,7 +44,7 @@ export function RemittancesDetailSection({
   };
 
   return (
-    <Card className="my-4">
+  <Card className="my-4 h-full flex flex-col">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <SendIcon className="h-5 w-5" />
@@ -64,10 +64,10 @@ export function RemittancesDetailSection({
           </Button>
         )}
       </CardHeader>
-      <CardContent className="space-y-4">
+  <CardContent className="space-y-4 flex-1 flex flex-col">
         {remittancesDetail.length === 0 ? (
-          <div className="text-center py-4">
-            <MailOpenIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+          <div className="flex flex-1 flex-col items-center justify-center text-center py-8">
+      <SendIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <h3 className="text-base font-medium text-muted-foreground mb-1">
               No hay remesas registradas
             </h3>

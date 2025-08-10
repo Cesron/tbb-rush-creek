@@ -81,13 +81,25 @@ export function RegisterDonation() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <ServiceInfoSection form={form} />
+
         <AttendanceSection form={form} />
+
         <TithesDetailSection form={form} />
-        <OtherDonationsDetailSection form={form} />
-        <RemittancesDetailSection form={form} />
-        <ChecksDetailSection form={form} />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <TithesDetailSection form={form} />
+          <OtherDonationsDetailSection form={form} />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <RemittancesDetailSection form={form} />
+          <ChecksDetailSection form={form} />
+        </div>
+
         <CoinsBreakdownSection form={form} />
+
         <BillsBreakdownSection form={form} />
+
         <FinalSummarySection
           form={form}
           totalTithes={totalTithes}
