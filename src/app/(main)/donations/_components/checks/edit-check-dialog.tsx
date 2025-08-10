@@ -53,6 +53,7 @@ export function EditCheckDialog({
     <Dialog>
       <DialogTrigger asChild>
         <Button
+          type="button"
           variant="outline"
           size="sm"
           onClick={() => {
@@ -111,7 +112,7 @@ export function EditCheckDialog({
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" onClick={reset}>
+            <Button type="button" variant="outline" onClick={reset}>
               Cancelar
             </Button>
           </DialogClose>

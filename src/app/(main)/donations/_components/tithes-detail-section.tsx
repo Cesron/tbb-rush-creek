@@ -53,7 +53,12 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
         </CardTitle>
         {form.watch("tithesDetail") &&
           form.watch("tithesDetail").length > 0 && (
-            <Button variant="outline" size="sm" onClick={openAddDialog}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={openAddDialog}
+            >
               Agregar Diezmo
             </Button>
           )}
@@ -69,7 +74,12 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
             <p className="text-xs text-muted-foreground mb-3">
               Agregue los detalles de los diezmos recibidos durante el servicio
             </p>
-            <Button variant="outline" size="sm" onClick={openAddDialog}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={openAddDialog}
+            >
               Agregar Primer Diezmo
             </Button>
           </div>
@@ -98,6 +108,7 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
                         onEdit={() => {}}
                       />
                       <Button
+                        type="button"
                         variant="destructive"
                         size="sm"
                         onClick={() => handleDeleteTithe(index)}

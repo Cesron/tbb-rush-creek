@@ -64,6 +64,7 @@ export function EditTitheDialog({
     <Dialog>
       <DialogTrigger asChild>
         <Button
+          type="button"
           variant="outline"
           size="sm"
           onClick={() => {
@@ -128,7 +129,7 @@ export function EditTitheDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" onClick={resetForm}>
+            <Button type="button" variant="outline" onClick={resetForm}>
               Cancelar
             </Button>
           </DialogClose>

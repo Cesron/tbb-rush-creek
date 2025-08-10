@@ -54,7 +54,12 @@ export function RemittancesDetailSection({
           </span>
         </CardTitle>
         {remittancesDetail.length > 0 && (
-          <Button variant="outline" size="sm" onClick={openAddDialog}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={openAddDialog}
+          >
             Agregar Remesa
           </Button>
         )}
@@ -69,7 +74,12 @@ export function RemittancesDetailSection({
             <p className="text-xs text-muted-foreground mb-3">
               Agrega las transferencias bancarias recibidas.
             </p>
-            <Button variant="outline" size="sm" onClick={openAddDialog}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={openAddDialog}
+            >
               Agregar Primera Remesa
             </Button>
           </div>
@@ -99,6 +109,7 @@ export function RemittancesDetailSection({
                           onEdit={() => {}}
                         />
                         <Button
+                          type="button"
                           variant="destructive"
                           size="sm"
                           onClick={() => handleDelete(index)}

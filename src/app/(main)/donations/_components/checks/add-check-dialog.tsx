@@ -93,7 +93,7 @@ export function AddCheckDialog({
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" onClick={close}>
+            <Button type="button" variant="outline" onClick={close}>
               Cancelar
             </Button>
           </DialogClose>

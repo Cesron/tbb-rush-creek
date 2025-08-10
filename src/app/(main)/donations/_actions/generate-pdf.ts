@@ -5,93 +5,99 @@ import { autoTable, CellHookData } from "jspdf-autotable";
 import { donationSchema, Donation } from "../_lib/donations-schema";
 import { actionClient } from "@/lib/safe-action";
 
-// Type declarations for jsPDF with autoTable
 declare module "jspdf" {
   interface jsPDF {
-    lastAutoTable?: {
-      finalY: number;
-    };
+    lastAutoTable?: { finalY: number };
   }
 }
 
 async function generateDonationPDF(data: Donation) {
   try {
-    // Create new PDF document
     const doc = new jsPDF();
-
-    // Set font
     doc.setFont("helvetica");
 
-    let yPosition = 20;
+    const drawHeader = () => {
+      const headerText =
+        'ABERNACULO BIBLICO BAUTISTA "AMIGOS DE ISRAEL" PLAN DEL PINO - RS EL SALVADOR';
+      const pageWidth: number = (
+        doc as unknown as { internal: { pageSize: { getWidth: () => number } } }
+      ).internal.pageSize.getWidth();
+      doc.setFontSize(11).setFont("helvetica", "bold");
+      doc.text(headerText, pageWidth / 2, 12, { align: "center" });
+      doc
+        .setDrawColor(0, 0, 0)
+        .setLineWidth(0.2)
+        .line(15, 14, pageWidth - 15, 14);
+      doc.setFont("helvetica", "normal");
+    };
+    drawHeader();
 
-    // Service Information Section - as text instead of table
-    doc.setFontSize(10);
-    doc.setTextColor(40, 40, 40);
+    let yPosition = 22;
+
+    // Información del Servicio
+    doc.setFontSize(10).setTextColor(40, 40, 40).setFont("helvetica", "bold");
     doc.text("Información del Servicio", 20, yPosition);
+    yPosition += 10; // extra space after service info section
+    doc.setFontSize(9).setTextColor(60, 60, 60).setFont("helvetica", "normal");
+
+    const col1LabelX = 20;
+    const col1ValueX = 40;
+    const col2LabelX = 100;
+    const col2ValueX = 128;
+    const rowHeight = 5;
+
+    // Row 1
+    doc.setFont("helvetica", "bold").text("Fecha:", col1LabelX, yPosition);
+    doc
+      .setFont("helvetica", "normal")
+      .text(`${data.serviceDate}`, col1ValueX, yPosition);
+    doc.setFont("helvetica", "bold").text("Tipo:", col2LabelX, yPosition);
+    doc
+      .setFont("helvetica", "normal")
+      .text(`${getServiceTypeLabel(data.serviceType)}`, col2ValueX, yPosition);
+    yPosition += rowHeight;
+    // Row 2
+    doc.setFont("helvetica", "bold").text("Predicador:", col1LabelX, yPosition);
+    doc
+      .setFont("helvetica", "normal")
+      .text(`${data.preacher}`, col1ValueX, yPosition);
+    doc.setFont("helvetica", "bold").text("Tema:", col2LabelX, yPosition);
+    doc
+      .setFont("helvetica", "normal")
+      .text(`${data.sermonTopic}`, col2ValueX, yPosition);
+    yPosition += rowHeight;
+    // Description
+    if (data.serviceDescription) {
+      doc
+        .setFont("helvetica", "bold")
+        .text("Descripción:", col1LabelX, yPosition);
+      doc.setFont("helvetica", "normal");
+      const descLines = doc.splitTextToSize(data.serviceDescription, 170);
+      doc.text(descLines, col1ValueX, yPosition);
+      yPosition += descLines.length * 4 + 1;
+    }
     yPosition += 6;
 
-    doc.setFontSize(9);
-    doc.setTextColor(60, 60, 60);
-
-    // Service info as text with bold labels
-    doc.setFont("helvetica", "bold");
-    doc.text("Fecha:", 20, yPosition);
-    doc.setFont("helvetica", "normal");
-    doc.text(`${data.serviceDate}`, 35, yPosition);
-
-    doc.setFont("helvetica", "bold");
-    doc.text("Tipo:", 120, yPosition);
-    doc.setFont("helvetica", "normal");
-    doc.text(`${getServiceTypeLabel(data.serviceType)}`, 135, yPosition);
-    yPosition += 4;
-
-    doc.setFont("helvetica", "bold");
-    doc.text("Predicador:", 20, yPosition);
-    doc.setFont("helvetica", "normal");
-    doc.text(`${data.preacher}`, 50, yPosition);
-    yPosition += 4;
-
-    doc.setFont("helvetica", "bold");
-    doc.text("Tema:", 20, yPosition);
-    doc.setFont("helvetica", "normal");
-    doc.text(`${data.sermonTopic}`, 35, yPosition);
-    yPosition += 4;
-
-    if (data.serviceDescription) {
-      doc.setFont("helvetica", "bold");
-      doc.text("Descripción:", 20, yPosition);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${data.serviceDescription}`, 55, yPosition);
-      yPosition += 4;
-    }
-
-    yPosition += 4;
-
-    // Attendance Section
-    doc.setFontSize(10);
-    doc.setTextColor(40, 40, 40);
+    // Asistencia
+    doc.setFontSize(10).setFont("helvetica", "bold").setTextColor(40, 40, 40);
     doc.text("Asistencia", 20, yPosition);
     yPosition += 4;
-
     const childrenAttendance = parseInt(data.childrenAttendance || "0");
     const adultAttendance = parseInt(data.adultAttendance || "0");
     const templeServers = parseInt(data.templeServers || "0");
     const bibleSchoolServers = parseInt(data.bibleSchoolServers || "0");
     const totalAttendance =
       childrenAttendance + adultAttendance + templeServers + bibleSchoolServers;
-
-    const attendanceInfo = [
-      ["Asistencia de Niños", childrenAttendance.toString()],
-      ["Asistencia de Adultos", adultAttendance.toString()],
-      ["Servidores del Templo", templeServers.toString()],
-      ["Servidores Escuela Bíblica", bibleSchoolServers.toString()],
-      ["TOTAL ASISTENCIA", totalAttendance.toString()],
-    ];
-
     autoTable(doc, {
       startY: yPosition,
       head: [["Tipo", "Cantidad"]],
-      body: attendanceInfo,
+      body: [
+        ["Asistencia de Niños", childrenAttendance.toString()],
+        ["Asistencia de Adultos", adultAttendance.toString()],
+        ["Servidores del Templo", templeServers.toString()],
+        ["Servidores Escuela Bíblica", bibleSchoolServers.toString()],
+        ["TOTAL ASISTENCIA", totalAttendance.toString()],
+      ],
       theme: "plain",
       headStyles: {
         fillColor: [220, 220, 220],
@@ -108,15 +114,14 @@ async function generateDonationPDF(data: Donation) {
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       columnStyles: {
-        0: { cellWidth: "auto", fontStyle: "bold" },
+        0: { fontStyle: "bold" },
         1: { cellWidth: 30, halign: "center" },
       },
-      didParseCell: function (cellData: CellHookData) {
-        if (cellData.row.index === 4) {
-          // Total row (last row)
-          cellData.cell.styles.fontStyle = "bold";
-          cellData.cell.styles.fillColor = [240, 240, 240];
-          cellData.cell.styles.lineWidth = {
+      didParseCell: (cell: CellHookData) => {
+        if (cell.row.index === 4) {
+          cell.cell.styles.fontStyle = "bold";
+          cell.cell.styles.fillColor = [240, 240, 240];
+          cell.cell.styles.lineWidth = {
             top: 0.1,
             bottom: 0,
             left: 0,
@@ -125,39 +130,19 @@ async function generateDonationPDF(data: Donation) {
         }
       },
     });
+    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 12; // more gap after attendance table
 
-    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 6;
-
-    // Financial Totals Section
-    doc.setFontSize(10);
-    doc.setTextColor(40, 40, 40);
-    doc.text("Totales Financieros", 20, yPosition);
+    // Desglose de Efectivo (dos tablas lado a lado)
+    doc
+      .setFontSize(10)
+      .setFont("helvetica", "bold")
+      .text("Desglose de Efectivo", 20, yPosition);
     yPosition += 4;
-
-    // Totales ahora automáticos: diezmos = suma de detalle; ofrendas = efectivo contado - diezmos.
-    const totalTithes = data.tithesDetail?.reduce(
-      (sum: number, t: { amount: string }) => sum + (parseFloat(t.amount) || 0),
-      0
-    );
-
-    // Para calcular ofrendas necesitamos el efectivo contado; lo calculamos después del desglose y luego generamos esta tabla.
-    // Retardaremos la tabla de totales financieros hasta disponer del efectivo contado.
-
-    // (Tabla de totales financieros se genera más adelante con datos calculados)
-
-    // Cash Breakdown Section
-    doc.setFontSize(10);
-    doc.setTextColor(40, 40, 40);
-    doc.text("Desglose de Efectivo", 20, yPosition);
-    yPosition += 4;
-
-    // Coins
     const coins001 = parseInt(data.coins_001 || "0");
     const coins005 = parseInt(data.coins_005 || "0");
     const coins010 = parseInt(data.coins_010 || "0");
     const coins025 = parseInt(data.coins_025 || "0");
     const coins100 = parseInt(data.coins_100 || "0");
-
     const coinsInfo = [
       ["$0.01", coins001.toString(), formatCurrency(coins001 * 0.01)],
       ["$0.05", coins005.toString(), formatCurrency(coins005 * 0.05)],
@@ -165,62 +150,18 @@ async function generateDonationPDF(data: Donation) {
       ["$0.25", coins025.toString(), formatCurrency(coins025 * 0.25)],
       ["$1.00", coins100.toString(), formatCurrency(coins100 * 1.0)],
     ];
-
     const totalCoins =
       coins001 * 0.01 +
       coins005 * 0.05 +
       coins010 * 0.1 +
       coins025 * 0.25 +
       coins100 * 1.0;
-
-    // Coins table (left side)
-    autoTable(doc, {
-      startY: yPosition,
-      head: [["MONEDAS", "Cant.", "Subtotal"]],
-      body: [...coinsInfo, ["TOTAL", "", formatCurrency(totalCoins)]],
-      theme: "plain",
-      headStyles: {
-        fillColor: [220, 220, 220],
-        textColor: [0, 0, 0],
-        fontSize: 8,
-        lineColor: [0, 0, 0],
-        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
-      },
-      margin: { left: 20, right: 105 },
-      styles: {
-        fontSize: 7,
-        cellPadding: 1.5,
-        lineColor: [0, 0, 0],
-        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
-      },
-      columnStyles: {
-        0: { cellWidth: 25, fontStyle: "bold" },
-        1: { cellWidth: 20, halign: "center" },
-        2: { cellWidth: 30, halign: "right" },
-      },
-      didParseCell: function (cellData: CellHookData) {
-        if (cellData.row.index === 5) {
-          // Total row (last row)
-          cellData.cell.styles.fontStyle = "bold";
-          cellData.cell.styles.fillColor = [240, 240, 240];
-          cellData.cell.styles.lineWidth = {
-            top: 0.1,
-            bottom: 0,
-            left: 0,
-            right: 0,
-          };
-        }
-      },
-    });
-
-    // Bills
     const bills001 = parseInt(data.bills_001 || "0");
     const bills005 = parseInt(data.bills_005 || "0");
     const bills010 = parseInt(data.bills_010 || "0");
     const bills020 = parseInt(data.bills_020 || "0");
     const bills050 = parseInt(data.bills_050 || "0");
     const bills100 = parseInt(data.bills_100 || "0");
-
     const billsInfo = [
       ["$1", bills001.toString(), formatCurrency(bills001 * 1)],
       ["$5", bills005.toString(), formatCurrency(bills005 * 5)],
@@ -229,7 +170,6 @@ async function generateDonationPDF(data: Donation) {
       ["$50", bills050.toString(), formatCurrency(bills050 * 50)],
       ["$100", bills100.toString(), formatCurrency(bills100 * 100)],
     ];
-
     const totalBills =
       bills001 * 1 +
       bills005 * 5 +
@@ -237,13 +177,23 @@ async function generateDonationPDF(data: Donation) {
       bills020 * 20 +
       bills050 * 50 +
       bills100 * 100;
-
-    // Bills table (right side)
+    const pageWidthCash: number = (
+      doc as unknown as { internal: { pageSize: { getWidth: () => number } } }
+    ).internal.pageSize.getWidth();
+    const contentWidthCash = pageWidthCash - 40; // margins
+    const gap = 6;
+    const halfWidth = (contentWidthCash - gap) / 2;
+    const leftX = 20;
+    const rightX = 20 + halfWidth + gap;
+    const cashStartY = yPosition;
+    // Monedas
     autoTable(doc, {
-      startY: yPosition,
-      head: [["BILLETES", "Cant.", "Subtotal"]],
-      body: [...billsInfo, ["TOTAL", "", formatCurrency(totalBills)]],
+      startY: cashStartY,
+      head: [["MONEDAS", "Cant.", "Subtotal"]],
+      body: [...coinsInfo, ["TOTAL", "", formatCurrency(totalCoins)]],
       theme: "plain",
+      tableWidth: halfWidth,
+      margin: { left: leftX },
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
@@ -251,24 +201,22 @@ async function generateDonationPDF(data: Donation) {
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
-      margin: { left: 115, right: 20 },
       styles: {
         fontSize: 7,
-        cellPadding: 1.5,
+        cellPadding: 1.2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       columnStyles: {
-        0: { cellWidth: 25, fontStyle: "bold" },
-        1: { cellWidth: 20, halign: "center" },
-        2: { cellWidth: 30, halign: "right" },
+        0: { cellWidth: halfWidth * 0.45, fontStyle: "bold" },
+        1: { cellWidth: halfWidth * 0.18, halign: "center" },
+        2: { cellWidth: halfWidth * 0.37, halign: "right" },
       },
-      didParseCell: function (cellData: CellHookData) {
-        if (cellData.row.index === 6) {
-          // Total row (last row)
-          cellData.cell.styles.fontStyle = "bold";
-          cellData.cell.styles.fillColor = [240, 240, 240];
-          cellData.cell.styles.lineWidth = {
+      didParseCell: (cell: CellHookData) => {
+        if (cell.row.index === 5) {
+          cell.cell.styles.fontStyle = "bold";
+          cell.cell.styles.fillColor = [240, 240, 240];
+          cell.cell.styles.lineWidth = {
             top: 0.1,
             bottom: 0,
             left: 0,
@@ -277,30 +225,72 @@ async function generateDonationPDF(data: Donation) {
         }
       },
     });
+    const coinsTableY = doc.lastAutoTable?.finalY || cashStartY;
+    // Billetes
+    autoTable(doc, {
+      startY: cashStartY,
+      head: [["BILLETES", "Cant.", "Subtotal"]],
+      body: [...billsInfo, ["TOTAL", "", formatCurrency(totalBills)]],
+      theme: "plain",
+      tableWidth: halfWidth,
+      margin: { left: rightX },
+      headStyles: {
+        fillColor: [220, 220, 220],
+        textColor: [0, 0, 0],
+        fontSize: 8,
+        lineColor: [0, 0, 0],
+        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+      },
+      styles: {
+        fontSize: 7,
+        cellPadding: 1.2,
+        lineColor: [0, 0, 0],
+        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+      },
+      columnStyles: {
+        0: { cellWidth: halfWidth * 0.45, fontStyle: "bold" },
+        1: { cellWidth: halfWidth * 0.18, halign: "center" },
+        2: { cellWidth: halfWidth * 0.37, halign: "right" },
+      },
+      didParseCell: (cell: CellHookData) => {
+        if (cell.row.index === 6) {
+          cell.cell.styles.fontStyle = "bold";
+          cell.cell.styles.fillColor = [240, 240, 240];
+          cell.cell.styles.lineWidth = {
+            top: 0.1,
+            bottom: 0,
+            left: 0,
+            right: 0,
+          };
+        }
+      },
+    });
+    const billsTableY = doc.lastAutoTable?.finalY || cashStartY;
+    yPosition = Math.max(coinsTableY, billsTableY) + 12; // more gap after cash breakdown
 
-    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 6;
-
-    // Total Cash Counted + Totales financieros automáticos
-    const totalCashCounted = totalCoins + totalBills;
+    // Totales Financieros
+    const totalTithes =
+      data.tithesDetail?.reduce((s, t) => s + (parseFloat(t.amount) || 0), 0) ||
+      0;
     const totalRemittances =
       data.remittancesDetail?.reduce(
-        (sum: number, r: { amount: string }) =>
-          sum + (parseFloat(r.amount) || 0),
+        (s, r) => s + (parseFloat(r.amount) || 0),
         0
       ) || 0;
     const totalChecks =
-      data.checksDetail?.reduce(
-        (sum: number, c: { amount: string }) =>
-          sum + (parseFloat(c.amount) || 0),
-        0
-      ) || 0;
+      data.checksDetail?.reduce((s, c) => s + (parseFloat(c.amount) || 0), 0) ||
+      0;
+    const totalCashCounted = totalCoins + totalBills;
     const totalOfferings = Math.max(
       totalCashCounted + totalRemittances + totalChecks - totalTithes,
       0
     );
     const totalFinancial = totalTithes + totalOfferings;
-
-    // Ahora generamos la tabla de Totales Financieros (reubicada)
+    doc
+      .setFontSize(10)
+      .setFont("helvetica", "bold")
+      .text("Totales Financieros", 20, yPosition);
+    yPosition += 4;
     autoTable(doc, {
       startY: yPosition,
       head: [["CONCEPTO", "Monto"]],
@@ -328,47 +318,76 @@ async function generateDonationPDF(data: Donation) {
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       columnStyles: {
-        0: { cellWidth: "auto", fontStyle: "bold" },
+        0: { fontStyle: "bold" },
         1: { cellWidth: 50, halign: "right" },
       },
-      didParseCell: function (cellData: CellHookData) {
-        if (cellData.row.index === 2) {
-          // Total financiero row
-          cellData.cell.styles.fontStyle = "bold";
-          cellData.cell.styles.fillColor = [240, 240, 240];
+      didParseCell: (cell: CellHookData) => {
+        if (cell.row.index === 4) {
+          cell.cell.styles.fontStyle = "bold";
+          cell.cell.styles.fillColor = [240, 240, 240];
         }
       },
     });
+    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 12; // more gap after totals table
 
-    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 6;
+    // Firmas (primera página)
+    doc
+      .setFontSize(10)
+      .setFont("helvetica", "bold")
+      .setTextColor(40, 40, 40)
+      .text("Firmas de los Servidores", 20, yPosition);
+    yPosition += 5; // slightly more space under section title
+    doc
+      .setFontSize(8.5)
+      .text("NOMBRE", 25, yPosition)
+      .text("FIRMA", 120, yPosition);
+    yPosition += 6; // more gap so first line leaves room for handwriting
+    doc.setFont("helvetica", "normal").setDrawColor(0, 0, 0);
+    const signatureLineHeight = 9; // increased vertical spacing per signer
+    for (let i = 0; i < 3; i++) {
+      doc.line(20, yPosition, 90, yPosition); // name line
+      doc.line(110, yPosition, 190, yPosition); // signature line
+      yPosition += signatureLineHeight;
+    }
+    // Supervisor label and line aligned on same baseline
+    doc
+      .setFont("helvetica", "bold")
+      .setFontSize(8.5)
+      .text("SUPERVISOR", 20, yPosition);
+    const supervisorLineY = yPosition + 1.5; // a bit below label for clarity
+    doc.line(45, supervisorLineY, 190, supervisorLineY);
+    yPosition += signatureLineHeight; // maintain consistent spacing after block
 
-    // Tithes Detail Section if there are any
-    if (data.tithesDetail && data.tithesDetail.length > 0) {
-      doc.setFontSize(10);
-      doc.setTextColor(40, 40, 40);
-      doc.text("Detalle de Diezmos", 20, yPosition);
+    const hasAnyDetail =
+      (data.tithesDetail?.length || 0) > 0 ||
+      (data.remittancesDetail?.length || 0) > 0 ||
+      (data.checksDetail?.length || 0) > 0;
+    if (hasAnyDetail) {
+      doc.addPage();
+      drawHeader();
+      yPosition = 22;
+    }
+
+    const renderDetail = (
+      title: string,
+      rows: { name: string; amount: string }[] | undefined,
+      totalLabel: string
+    ) => {
+      if (!rows || rows.length === 0) return;
+      doc
+        .setFontSize(10)
+        .setFont("helvetica", "bold")
+        .text(title, 20, yPosition);
       yPosition += 4;
-
-      const tithesDetailRows = data.tithesDetail.map(
-        (tithe: { name: string; amount: string }) => [
-          tithe.name,
-          formatCurrency(parseFloat(tithe.amount) || 0),
-        ]
-      );
-
-      const totalTithesDetail = data.tithesDetail.reduce(
-        (sum: number, tithe: { name: string; amount: string }) =>
-          sum + (parseFloat(tithe.amount) || 0),
-        0
-      );
-
+      const mapped = rows.map((r) => [
+        r.name,
+        formatCurrency(parseFloat(r.amount) || 0),
+      ]);
+      const total = rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
       autoTable(doc, {
         startY: yPosition,
         head: [["Nombre", "Monto"]],
-        body: [
-          ...tithesDetailRows,
-          ["TOTAL DIEZMOS DETALLE", formatCurrency(totalTithesDetail)],
-        ],
+        body: [...mapped, [totalLabel, formatCurrency(total)]],
         theme: "plain",
         headStyles: {
           fillColor: [220, 220, 220],
@@ -383,17 +402,17 @@ async function generateDonationPDF(data: Donation) {
           cellPadding: 2,
           lineColor: [0, 0, 0],
           lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+          overflow: "linebreak",
         },
         columnStyles: {
-          0: { cellWidth: "auto", fontStyle: "bold" },
+          0: { fontStyle: "bold" },
           1: { cellWidth: 50, halign: "right" },
         },
-        didParseCell: function (cellData: CellHookData) {
-          if (cellData.row.index === tithesDetailRows.length) {
-            // Total row (last row)
-            cellData.cell.styles.fontStyle = "bold";
-            cellData.cell.styles.fillColor = [240, 240, 240];
-            cellData.cell.styles.lineWidth = {
+        didParseCell: (cell: CellHookData) => {
+          if (cell.row.index === mapped.length) {
+            cell.cell.styles.fontStyle = "bold";
+            cell.cell.styles.fillColor = [240, 240, 240];
+            cell.cell.styles.lineWidth = {
               top: 0.1,
               bottom: 0,
               left: 0,
@@ -402,45 +421,28 @@ async function generateDonationPDF(data: Donation) {
           }
         },
       });
+      // Extra spacing after each detail table for clearer separation
+      yPosition = (doc.lastAutoTable?.finalY || yPosition) + 14;
+    };
 
-      yPosition = (doc.lastAutoTable?.finalY || yPosition) + 6;
-    }
+    // Detalles
+    renderDetail(
+      "Detalle de Diezmos",
+      data.tithesDetail,
+      "TOTAL DIEZMOS DETALLE"
+    );
+    renderDetail(
+      "Detalle de Remesas",
+      data.remittancesDetail,
+      "TOTAL REMESAS DETALLE"
+    );
+    renderDetail(
+      "Detalle de Cheques",
+      data.checksDetail,
+      "TOTAL CHEQUES DETALLE"
+    );
 
-    // Signatures Section - Compact lines like notebook
-    doc.setFontSize(10);
-    doc.setTextColor(40, 40, 40);
-    doc.text("Firmas de los Servidores", 20, yPosition);
-    yPosition += 6;
-
-    // Headers
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.text("Nombres", 30, yPosition);
-    doc.text("Firmas", 120, yPosition);
-    yPosition += 4;
-
-    // Draw 4 lines for servers
-    doc.setFont("helvetica", "normal");
-    doc.setDrawColor(0, 0, 0);
-    for (let i = 0; i < 4; i++) {
-      doc.line(20, yPosition, 90, yPosition); // Name line
-      doc.line(110, yPosition, 190, yPosition); // Signature line
-      yPosition += 8;
-    }
-
-    // Supervisor section
-    yPosition += 2;
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.text("SUPERVISOR:", 20, yPosition);
-    doc.setFont("helvetica", "normal");
-    doc.line(60, yPosition - 2, 190, yPosition - 2);
-
-    yPosition += 6;
-
-    // Generate the PDF as base64
     const pdfBase64 = doc.output("datauristring");
-
     return {
       success: true,
       data: {
@@ -448,12 +450,9 @@ async function generateDonationPDF(data: Donation) {
         filename: `reporte-donaciones-${data.serviceDate}.pdf`,
       },
     };
-  } catch (error) {
-    console.error("Error generating PDF:", error);
-    return {
-      success: false,
-      error: "Error al generar el PDF",
-    };
+  } catch (err) {
+    console.error("Error generating PDF", err);
+    return { success: false, error: "Error al generar el PDF" };
   }
 }
 

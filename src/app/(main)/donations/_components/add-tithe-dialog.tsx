@@ -110,7 +110,7 @@ export function AddTitheDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" onClick={closeDialog}>
+            <Button type="button" variant="outline" onClick={closeDialog}>
               Cancelar
             </Button>
           </DialogClose>

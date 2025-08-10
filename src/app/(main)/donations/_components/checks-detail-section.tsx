@@ -52,7 +52,12 @@ export function ChecksDetailSection({ form }: ChecksDetailSectionProps) {
           </span>
         </CardTitle>
         {checksDetail.length > 0 && (
-          <Button variant="outline" size="sm" onClick={openAddDialog}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={openAddDialog}
+          >
             Agregar Cheque
           </Button>
         )}
@@ -67,7 +72,12 @@ export function ChecksDetailSection({ form }: ChecksDetailSectionProps) {
             <p className="text-xs text-muted-foreground mb-3">
               Agrega los cheques recibidos.
             </p>
-            <Button variant="outline" size="sm" onClick={openAddDialog}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={openAddDialog}
+            >
               Agregar Primer Cheque
             </Button>
           </div>
@@ -97,6 +107,7 @@ export function ChecksDetailSection({ form }: ChecksDetailSectionProps) {
                           onEdit={() => {}}
                         />
                         <Button
+                          type="button"
                           variant="destructive"
                           size="sm"
                           onClick={() => handleDelete(index)}
