@@ -110,7 +110,7 @@ export function ServiceInfoSection({ form }: ServiceInfoSectionProps) {
               <FormLabel>Predicador</FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger ref={field.ref} className="w-full">
                     <SelectValue placeholder="Seleccione el predicador" />
                   </SelectTrigger>
                 </FormControl>
