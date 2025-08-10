@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
 import { currencyFormat } from "@/utils/currency-format";
 import { CoinsIcon, SendIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
@@ -37,7 +36,6 @@ export function FinalSummarySection({
   totalChecks,
   totalOtherDonations,
 }: FinalSummarySectionProps) {
-  // Recalcular desglose (solo lectura) para mostrar subtotales
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
   const coins005 = parseInt((form.watch("coins_005") as string) || "0");
   const coins010 = parseInt((form.watch("coins_010") as string) || "0");
@@ -80,7 +78,6 @@ export function FinalSummarySection({
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Métodos y conteo físico primero */}
           <div>
             <Table>
               <TableHeader>
@@ -135,7 +132,7 @@ export function FinalSummarySection({
               </TableBody>
             </Table>
           </div>
-          {/* Resumen financiero después */}
+
           <div>
             <Table>
               <TableHeader>
@@ -175,7 +172,6 @@ export function FinalSummarySection({
             </Table>
           </div>
         </div>
-        <Separator className="my-4" />
       </CardContent>
     </Card>
   );
