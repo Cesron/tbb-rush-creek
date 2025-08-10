@@ -43,6 +43,12 @@ export const donationSchema = z.object({
       amount: z.string(),
     })
   ),
+  otherDonationsDetail: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.string(),
+    })
+  ),
 });
 
 export type Donation = z.infer<typeof donationSchema>;

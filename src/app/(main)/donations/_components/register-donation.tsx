@@ -7,6 +7,7 @@ import { AttendanceSection } from "./attendance-section";
 import { CoinsBreakdownSection } from "./coins-breakdown-section";
 import { BillsBreakdownSection } from "./bills-breakdown-section";
 import { TithesDetailSection } from "./tithes-detail-section";
+import { OtherDonationsDetailSection } from "./other-donations-detail-section";
 import { FinalSummarySection } from "./final-summary-section";
 import { RemittancesDetailSection } from "./remittances-detail-section";
 import { ChecksDetailSection } from "./checks-detail-section";
@@ -27,6 +28,11 @@ export function RegisterDonation() {
   const checksDetail = form.watch("checksDetail") || [];
   const totalChecks = checksDetail.reduce(
     (sum, c) => sum + (parseFloat(c.amount) || 0),
+    0
+  );
+  const otherDonationsDetail = form.watch("otherDonationsDetail") || [];
+  const totalOtherDonations = otherDonationsDetail.reduce(
+    (sum, o) => sum + (parseFloat(o.amount) || 0),
     0
   );
 
@@ -61,11 +67,15 @@ export function RegisterDonation() {
   const totalCashCounted = totalCoins + totalBills;
 
   const totalOfferings = Math.max(
-    totalCashCounted + totalRemittances + totalChecks - totalTithes,
+    totalCashCounted +
+      totalRemittances +
+      totalChecks -
+      totalTithes -
+      totalOtherDonations,
     0
   );
 
-  const totalFinancial = totalTithes + totalOfferings;
+  const totalFinancial = totalTithes + totalOfferings + totalOtherDonations;
 
   return (
     <Form {...form}>
@@ -73,6 +83,7 @@ export function RegisterDonation() {
         <ServiceInfoSection form={form} />
         <AttendanceSection form={form} />
         <TithesDetailSection form={form} />
+        <OtherDonationsDetailSection form={form} />
         <RemittancesDetailSection form={form} />
         <ChecksDetailSection form={form} />
         <CoinsBreakdownSection form={form} />
@@ -85,6 +96,7 @@ export function RegisterDonation() {
           totalFinancial={totalFinancial}
           totalRemittances={totalRemittances}
           totalChecks={totalChecks}
+          totalOtherDonations={totalOtherDonations}
         />
       </form>
     </Form>

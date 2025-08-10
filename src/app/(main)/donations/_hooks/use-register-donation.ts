@@ -55,6 +55,7 @@ export function useRegisterDonation() {
       tithesDetail: [],
       remittancesDetail: [],
       checksDetail: [],
+      otherDonationsDetail: [],
     },
   });
 

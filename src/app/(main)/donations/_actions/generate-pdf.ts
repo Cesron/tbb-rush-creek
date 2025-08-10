@@ -279,12 +279,21 @@ async function generateDonationPDF(data: Donation) {
     const totalChecks =
       data.checksDetail?.reduce((s, c) => s + (parseFloat(c.amount) || 0), 0) ||
       0;
+    const totalOtherDonations =
+      data.otherDonationsDetail?.reduce(
+        (s, o) => s + (parseFloat(o.amount) || 0),
+        0
+      ) || 0;
     const totalCashCounted = totalCoins + totalBills;
     const totalOfferings = Math.max(
-      totalCashCounted + totalRemittances + totalChecks - totalTithes,
+      totalCashCounted +
+        totalRemittances +
+        totalChecks -
+        totalTithes -
+        totalOtherDonations,
       0
     );
-    const totalFinancial = totalTithes + totalOfferings;
+    const totalFinancial = totalTithes + totalOfferings + totalOtherDonations;
     doc
       .setFontSize(10)
       .setFont("helvetica", "bold")
@@ -297,6 +306,7 @@ async function generateDonationPDF(data: Donation) {
         ["Total Diezmos", formatCurrency(totalTithes)],
         ["Total Remesas", formatCurrency(totalRemittances)],
         ["Total Cheques", formatCurrency(totalChecks)],
+        ["Total Otras Donaciones", formatCurrency(totalOtherDonations)],
         ["Total Ofrendas", formatCurrency(totalOfferings)],
         ["TOTAL FINANCIERO", formatCurrency(totalFinancial)],
         ["Total Efectivo Contado", formatCurrency(totalCashCounted)],
@@ -360,7 +370,8 @@ async function generateDonationPDF(data: Donation) {
     const hasAnyDetail =
       (data.tithesDetail?.length || 0) > 0 ||
       (data.remittancesDetail?.length || 0) > 0 ||
-      (data.checksDetail?.length || 0) > 0;
+      (data.checksDetail?.length || 0) > 0 ||
+      (data.otherDonationsDetail?.length || 0) > 0;
     if (hasAnyDetail) {
       doc.addPage();
       drawHeader();
@@ -439,6 +450,11 @@ async function generateDonationPDF(data: Donation) {
       "Detalle de Cheques",
       data.checksDetail,
       "TOTAL CHEQUES DETALLE"
+    );
+    renderDetail(
+      "Detalle de Otras Donaciones",
+      data.otherDonationsDetail,
+      "TOTAL OTRAS DONACIONES DETALLE"
     );
 
     const pdfBase64 = doc.output("datauristring");

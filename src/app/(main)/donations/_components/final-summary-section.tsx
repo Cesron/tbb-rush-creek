@@ -24,6 +24,7 @@ interface FinalSummarySectionProps {
   totalFinancial: number;
   totalRemittances: number;
   totalChecks: number;
+  totalOtherDonations: number;
 }
 
 export function FinalSummarySection({
@@ -34,6 +35,7 @@ export function FinalSummarySection({
   totalFinancial,
   totalRemittances,
   totalChecks,
+  totalOtherDonations,
 }: FinalSummarySectionProps) {
   // Recalcular desglose (solo lectura) para mostrar subtotales
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
@@ -153,6 +155,12 @@ export function FinalSummarySection({
                   <TableCell>Diezmos</TableCell>
                   <TableCell className="text-right font-mono">
                     {currencyFormat(totalTithes)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Otras Donaciones</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {currencyFormat(totalOtherDonations)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
