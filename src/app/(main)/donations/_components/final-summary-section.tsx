@@ -146,7 +146,7 @@ export function FinalSummarySection({
               </TableHeader>
               <TableBody>
                 <TableRow className="bg-muted/30">
-                  <TableCell className="font-medium">Ofrendas</TableCell>
+                  <TableCell>Ofrendas</TableCell>
                   <TableCell className="text-right font-mono">
                     {currencyFormat(totalOfferings)}
                   </TableCell>

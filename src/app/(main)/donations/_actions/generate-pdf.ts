@@ -442,6 +442,11 @@ async function generateDonationPDF(data: Donation) {
       "TOTAL DIEZMOS DETALLE"
     );
     renderDetail(
+      "Detalle de Otras Donaciones",
+      data.otherDonationsDetail,
+      "TOTAL OTRAS DONACIONES DETALLE"
+    );
+    renderDetail(
       "Detalle de Remesas",
       data.remittancesDetail,
       "TOTAL REMESAS DETALLE"
@@ -450,11 +455,6 @@ async function generateDonationPDF(data: Donation) {
       "Detalle de Cheques",
       data.checksDetail,
       "TOTAL CHEQUES DETALLE"
-    );
-    renderDetail(
-      "Detalle de Otras Donaciones",
-      data.otherDonationsDetail,
-      "TOTAL OTRAS DONACIONES DETALLE"
     );
 
     const pdfBase64 = doc.output("datauristring");
