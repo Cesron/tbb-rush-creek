@@ -60,28 +60,22 @@ export function useRegisterDonation() {
 
   async function onSubmit(data: Donation) {
     try {
-      // Call the generatePdfAction with the form data
       const result = await generatePdfAction(data);
 
       if (result?.data?.success && result.data.data) {
-        // Extract the base64 PDF data and filename
         const { pdfBase64, filename } = result.data.data;
 
-        // Convert base64 to blob
         const response = await fetch(pdfBase64);
         const blob = await response.blob();
 
-        // Create download link
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.download = filename;
 
-        // Trigger download
         document.body.appendChild(link);
         link.click();
 
-        // Cleanup
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
 

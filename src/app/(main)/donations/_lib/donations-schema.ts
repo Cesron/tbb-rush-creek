@@ -3,17 +3,14 @@ import { z } from "zod";
 export const donationSchema = z.object({
   serviceDate: z.string().min(1, "Por favor, ingrese la fecha del servicio"),
   serviceType: z.string().min(1, "Por favor, seleccione el tipo de servicio"),
-  sermonTopic: z
-    .string()
-    .min(1, "Por favor, ingrese el tema de la predicación"),
   preacher: z.string().min(1, "Por favor, ingrese el nombre del predicador"),
+  sermonTopic: z.string(),
   serviceDescription: z.string(),
 
   childrenAttendance: z.string().optional(),
   adultAttendance: z.string().optional(),
   templeServers: z.string().optional(),
   bibleSchoolServers: z.string().optional(),
-  // Totales financieros ahora se calculan automáticamente (diezmos se derivan de tithesDetail y ofrendas del efectivo contado)
 
   coins_001: z.string().optional(),
   coins_005: z.string().optional(),

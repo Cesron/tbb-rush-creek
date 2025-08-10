@@ -17,8 +17,7 @@ async function generateDonationPDF(data: Donation) {
     doc.setFont("helvetica");
 
     const drawHeader = () => {
-      const headerText =
-        'ABERNACULO BIBLICO BAUTISTA "AMIGOS DE ISRAEL" PLAN DEL PINO - RS EL SALVADOR';
+      const headerText = "Tabernáculo Rush Creek El Salvador";
       const pageWidth: number = (
         doc as unknown as { internal: { pageSize: { getWidth: () => number } } }
       ).internal.pageSize.getWidth();
