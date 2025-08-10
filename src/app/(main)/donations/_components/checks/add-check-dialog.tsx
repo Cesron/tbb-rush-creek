@@ -58,6 +58,12 @@ export function AddCheckDialog({
               placeholder="Nombre..."
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAdd();
+                }
+              }}
             />
           </div>
           <div className="space-y-2">
@@ -72,6 +78,12 @@ export function AddCheckDialog({
                 className="peer ps-6"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAdd();
+                  }
+                }}
               />
               <span className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-sm peer-disabled:opacity-50">
                 $

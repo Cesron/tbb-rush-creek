@@ -78,6 +78,12 @@ export function EditRemittanceDialog({
               placeholder="Nombre..."
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSave();
+                }
+              }}
             />
           </div>
           <div>
@@ -92,6 +98,12 @@ export function EditRemittanceDialog({
                 className="peer ps-6"
                 value={editAmount}
                 onChange={(e) => setEditAmount(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSave();
+                  }
+                }}
               />
               <span className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-sm peer-disabled:opacity-50">
                 $
