@@ -42,7 +42,7 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
   };
 
   return (
-    <Card className="my-4 h-full flex flex-col">
+    <Card className="h-full flex flex-col">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <MailIcon className="h-5 w-5" />
