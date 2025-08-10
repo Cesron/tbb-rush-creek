@@ -42,7 +42,7 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
   };
 
   return (
-  <Card className="my-4 h-full flex flex-col">
+    <Card className="my-4 h-full flex flex-col">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <MailIcon className="h-5 w-5" />
@@ -63,11 +63,11 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
             </Button>
           )}
       </CardHeader>
-  <CardContent className="space-y-4 flex-1 flex flex-col">
+      <CardContent className="space-y-4 flex-1 flex flex-col">
         {!form.watch("tithesDetail") ||
         form.watch("tithesDetail").length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center py-8">
-      <MailIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <MailIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <h3 className="text-base font-medium text-muted-foreground mb-1">
               No hay diezmos registrados
             </h3>

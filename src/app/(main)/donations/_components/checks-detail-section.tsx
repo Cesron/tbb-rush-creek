@@ -42,7 +42,7 @@ export function ChecksDetailSection({ form }: ChecksDetailSectionProps) {
   };
 
   return (
-  <Card className="my-4 h-full flex flex-col">
+    <Card className="my-4 h-full flex flex-col">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <PaperclipIcon className="h-5 w-5" />
@@ -62,10 +62,10 @@ export function ChecksDetailSection({ form }: ChecksDetailSectionProps) {
           </Button>
         )}
       </CardHeader>
-  <CardContent className="space-y-4 flex-1 flex flex-col">
+      <CardContent className="space-y-4 flex-1 flex flex-col">
         {checksDetail.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center py-8">
-      <PaperclipIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <PaperclipIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <h3 className="text-base font-medium text-muted-foreground mb-1">
               No hay cheques registrados
             </h3>
