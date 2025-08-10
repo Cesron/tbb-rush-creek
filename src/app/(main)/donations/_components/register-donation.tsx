@@ -4,28 +4,31 @@ import { Form } from "@/components/ui/form";
 import { useRegisterDonation } from "../_hooks/use-register-donation";
 import { ServiceInfoSection } from "./service-info-section";
 import { AttendanceSection } from "./attendance-section";
-import { FinancialTotalSection } from "./financial-total-section";
 import { CoinsBreakdownSection } from "./coins-breakdown-section";
 import { BillsBreakdownSection } from "./bills-breakdown-section";
 import { TithesDetailSection } from "./tithes-detail-section";
 import { FinalSummarySection } from "./final-summary-section";
+import { RemittancesDetailSection } from "./remittances-detail-section";
+import { ChecksDetailSection } from "./checks-detail-section";
 
 export function RegisterDonation() {
   const { form, onSubmit } = useRegisterDonation();
 
-  const totalTithes = parseFloat((form.watch("totalTithes") as string) || "0");
   const tithesDetail = form.watch("tithesDetail") || [];
-  const totalTithesDetail = tithesDetail.reduce(
+  const totalTithes = tithesDetail.reduce(
     (sum, tithe) => sum + (parseFloat(tithe.amount) || 0),
     0
   );
-  const tithesDifference = totalTithesDetail - totalTithes;
-
-  const totalOfferings = parseFloat(
-    (form.watch("totalOfferings") as string) || "0"
+  const remittancesDetail = form.watch("remittancesDetail") || [];
+  const totalRemittances = remittancesDetail.reduce(
+    (sum, r) => sum + (parseFloat(r.amount) || 0),
+    0
   );
-  const otherIncome = parseFloat((form.watch("otherIncome") as string) || "0");
-  const totalFinancial = totalOfferings + totalTithes + otherIncome;
+  const checksDetail = form.watch("checksDetail") || [];
+  const totalChecks = checksDetail.reduce(
+    (sum, c) => sum + (parseFloat(c.amount) || 0),
+    0
+  );
 
   // Calcular totales de monedas
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
@@ -58,22 +61,32 @@ export function RegisterDonation() {
     bills100 * 100;
 
   const totalCashCounted = totalCoins + totalBills;
-  const difference = totalCashCounted - totalFinancial;
-
-  const cashMatches = Math.abs(difference) < 0.01;
-  const tithesMatch = Math.abs(tithesDifference) < 0.01;
-  const canSubmit = cashMatches && tithesMatch;
+  // Ofrendas = efectivo contado - diezmos (sin negativos)
+  const totalOfferings = Math.max(
+    totalCashCounted + totalRemittances + totalChecks - totalTithes,
+    0
+  );
+  const totalFinancial = totalTithes + totalOfferings;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <ServiceInfoSection form={form} />
         <AttendanceSection form={form} />
-        <FinancialTotalSection form={form} />
+        <TithesDetailSection form={form} />
+        <RemittancesDetailSection form={form} />
+        <ChecksDetailSection form={form} />
         <CoinsBreakdownSection form={form} />
         <BillsBreakdownSection form={form} />
-        <TithesDetailSection form={form} />
-        <FinalSummarySection form={form} canSubmit={canSubmit} />
+        <FinalSummarySection
+          form={form}
+          totalTithes={totalTithes}
+          totalOfferings={totalOfferings}
+          totalCashCounted={totalCashCounted}
+          totalFinancial={totalFinancial}
+          totalRemittances={totalRemittances}
+          totalChecks={totalChecks}
+        />
       </form>
     </Form>
   );

@@ -13,10 +13,7 @@ export const donationSchema = z.object({
   adultAttendance: z.string().optional(),
   templeServers: z.string().optional(),
   bibleSchoolServers: z.string().optional(),
-
-  totalOfferings: z.string().optional(),
-  totalTithes: z.string().optional(),
-  otherIncome: z.string().optional(),
+  // Totales financieros ahora se calculan automáticamente (diezmos se derivan de tithesDetail y ofrendas del efectivo contado)
 
   coins_001: z.string().optional(),
   coins_005: z.string().optional(),
@@ -32,6 +29,18 @@ export const donationSchema = z.object({
   bills_100: z.string().optional(),
 
   tithesDetail: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.string(),
+    })
+  ),
+  remittancesDetail: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.string(),
+    })
+  ),
+  checksDetail: z.array(
     z.object({
       name: z.string(),
       amount: z.string(),

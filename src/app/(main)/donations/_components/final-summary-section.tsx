@@ -15,25 +15,27 @@ import { currencyFormat } from "@/utils/currency-format";
 import { CoinsIcon, SendIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
-import { DifferenceMessage } from "./difference-message";
 
 interface FinalSummarySectionProps {
   form: UseFormReturn<Donation>;
-  canSubmit: boolean;
+  totalTithes: number;
+  totalOfferings: number;
+  totalCashCounted: number;
+  totalFinancial: number;
+  totalRemittances: number;
+  totalChecks: number;
 }
 
 export function FinalSummarySection({
   form,
-  canSubmit,
+  totalTithes,
+  totalOfferings,
+  totalCashCounted,
+  totalFinancial,
+  totalRemittances,
+  totalChecks,
 }: FinalSummarySectionProps) {
-  const totalOfferings = parseFloat(
-    (form.watch("totalOfferings") as string) || "0"
-  );
-  const totalTithes = parseFloat((form.watch("totalTithes") as string) || "0");
-  const otherIncome = parseFloat((form.watch("otherIncome") as string) || "0");
-  const totalFinancial = totalOfferings + totalTithes + otherIncome;
-
-  // Calcular totales de monedas
+  // Recalcular desglose (solo lectura) para mostrar subtotales
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
   const coins005 = parseInt((form.watch("coins_005") as string) || "0");
   const coins010 = parseInt((form.watch("coins_010") as string) || "0");
@@ -47,7 +49,6 @@ export function FinalSummarySection({
     coins025 * 0.25 +
     coins100 * 1.0;
 
-  // Calcular totales de billetes
   const bills001 = parseInt((form.watch("bills_001") as string) || "0");
   const bills005 = parseInt((form.watch("bills_005") as string) || "0");
   const bills010 = parseInt((form.watch("bills_010") as string) || "0");
@@ -63,9 +64,6 @@ export function FinalSummarySection({
     bills050 * 50 +
     bills100 * 100;
 
-  const totalCashCounted = totalCoins + totalBills;
-  const difference = totalCashCounted - totalFinancial;
-
   return (
     <Card className="my-4">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -73,7 +71,7 @@ export function FinalSummarySection({
           <CoinsIcon className="h-5 w-5" />
           Resumen Final de Donaciones
         </CardTitle>
-        <Button type="submit" disabled={!canSubmit}>
+        <Button type="submit">
           <SendIcon className="h-5 w-5 mr-2" />
           Finalizar registro
         </Button>
@@ -98,12 +96,6 @@ export function FinalSummarySection({
                 <TableCell>Diezmos</TableCell>
                 <TableCell className="text-right font-semibold font-mono">
                   {currencyFormat(totalTithes)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Otros ingresos</TableCell>
-                <TableCell className="text-right font-semibold font-mono">
-                  {currencyFormat(otherIncome)}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -138,6 +130,18 @@ export function FinalSummarySection({
                 </TableCell>
               </TableRow>
               <TableRow>
+                <TableCell>Remesas</TableCell>
+                <TableCell className="text-right font-semibold font-mono">
+                  {currencyFormat(totalRemittances)}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Cheques</TableCell>
+                <TableCell className="text-right font-semibold font-mono">
+                  {currencyFormat(totalChecks)}
+                </TableCell>
+              </TableRow>
+              <TableRow>
                 <TableCell className="font-semibold">
                   Total efectivo contado
                 </TableCell>
@@ -149,10 +153,6 @@ export function FinalSummarySection({
           </Table>
         </div>
         <Separator className="my-4" />
-        <DifferenceMessage
-          difference={difference}
-          currencyFormat={currencyFormat}
-        />
       </CardContent>
     </Card>
   );

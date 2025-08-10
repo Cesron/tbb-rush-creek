@@ -41,9 +41,6 @@ export function useRegisterDonation() {
       adultAttendance: "",
       templeServers: "",
       bibleSchoolServers: "",
-      totalOfferings: "",
-      totalTithes: "",
-      otherIncome: "",
       coins_001: "",
       coins_005: "",
       coins_010: "",
@@ -56,6 +53,8 @@ export function useRegisterDonation() {
       bills_050: "",
       bills_100: "",
       tithesDetail: [],
+      remittancesDetail: [],
+      checksDetail: [],
     },
   });
 

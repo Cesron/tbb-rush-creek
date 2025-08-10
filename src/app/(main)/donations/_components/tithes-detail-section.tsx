@@ -15,7 +15,6 @@ import { currencyFormat } from "@/utils/currency-format";
 import { MailIcon, MailOpenIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
-import { TitheDifferenceMessage } from "./tithe-difference-message";
 import { AddTitheDialog } from "./add-tithe-dialog";
 import { EditTitheDialog } from "./edit-tithe-dialog";
 
@@ -26,13 +25,11 @@ interface TithesDetailSectionProps {
 export function TithesDetailSection({ form }: TithesDetailSectionProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const totalTithes = parseFloat((form.watch("totalTithes") as string) || "0");
   const tithesDetail = form.watch("tithesDetail") || [];
   const totalTithesDetail = tithesDetail.reduce(
     (sum, tithe) => sum + (parseFloat(tithe.amount) || 0),
     0
   );
-  const tithesDifference = totalTithesDetail - totalTithes;
 
   const openAddDialog = () => {
     setIsAddDialogOpen(true);
@@ -129,10 +126,7 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
           </Table>
         )}
 
-        <TitheDifferenceMessage
-          difference={tithesDifference}
-          currencyFormat={currencyFormat}
-        />
+        {/* Mensaje de diferencia eliminado: los totales ahora son automáticos */}
       </CardContent>
 
       <AddTitheDialog

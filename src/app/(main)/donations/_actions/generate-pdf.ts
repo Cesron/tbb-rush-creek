@@ -134,57 +134,16 @@ async function generateDonationPDF(data: Donation) {
     doc.text("Totales Financieros", 20, yPosition);
     yPosition += 4;
 
-    const totalOfferings = parseFloat(data.totalOfferings || "0");
-    const totalTithes = parseFloat(data.totalTithes || "0");
-    const otherIncome = parseFloat(data.otherIncome || "0");
-    const totalFinancial = totalOfferings + totalTithes + otherIncome;
+    // Totales ahora automáticos: diezmos = suma de detalle; ofrendas = efectivo contado - diezmos.
+    const totalTithes = data.tithesDetail?.reduce(
+      (sum: number, t: { amount: string }) => sum + (parseFloat(t.amount) || 0),
+      0
+    );
 
-    const financialInfo = [
-      ["Total de Ofrendas", formatCurrency(totalOfferings)],
-      ["Total de Diezmos", formatCurrency(totalTithes)],
-      ["Otros Ingresos", formatCurrency(otherIncome)],
-      ["TOTAL FINANCIERO", formatCurrency(totalFinancial)],
-    ];
+    // Para calcular ofrendas necesitamos el efectivo contado; lo calculamos después del desglose y luego generamos esta tabla.
+    // Retardaremos la tabla de totales financieros hasta disponer del efectivo contado.
 
-    autoTable(doc, {
-      startY: yPosition,
-      head: [["Concepto", "Monto"]],
-      body: financialInfo,
-      theme: "plain",
-      headStyles: {
-        fillColor: [220, 220, 220],
-        textColor: [0, 0, 0],
-        fontSize: 9,
-        lineColor: [0, 0, 0],
-        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
-      },
-      margin: { left: 20, right: 20 },
-      styles: {
-        fontSize: 8,
-        cellPadding: 2,
-        lineColor: [0, 0, 0],
-        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
-      },
-      columnStyles: {
-        0: { cellWidth: "auto", fontStyle: "bold" },
-        1: { cellWidth: 50, halign: "right" },
-      },
-      didParseCell: function (cellData: CellHookData) {
-        if (cellData.row.index === 3) {
-          // Total row (last row)
-          cellData.cell.styles.fontStyle = "bold";
-          cellData.cell.styles.fillColor = [240, 240, 240];
-          cellData.cell.styles.lineWidth = {
-            top: 0.1,
-            bottom: 0,
-            left: 0,
-            right: 0,
-          };
-        }
-      },
-    });
-
-    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 6;
+    // (Tabla de totales financieros se genera más adelante con datos calculados)
 
     // Cash Breakdown Section
     doc.setFontSize(10);
@@ -321,17 +280,37 @@ async function generateDonationPDF(data: Donation) {
 
     yPosition = (doc.lastAutoTable?.finalY || yPosition) + 6;
 
-    // Total Cash Counted
+    // Total Cash Counted + Totales financieros automáticos
     const totalCashCounted = totalCoins + totalBills;
-    const difference = totalCashCounted - totalFinancial;
+    const totalRemittances =
+      data.remittancesDetail?.reduce(
+        (sum: number, r: { amount: string }) =>
+          sum + (parseFloat(r.amount) || 0),
+        0
+      ) || 0;
+    const totalChecks =
+      data.checksDetail?.reduce(
+        (sum: number, c: { amount: string }) =>
+          sum + (parseFloat(c.amount) || 0),
+        0
+      ) || 0;
+    const totalOfferings = Math.max(
+      totalCashCounted + totalRemittances + totalChecks - totalTithes,
+      0
+    );
+    const totalFinancial = totalTithes + totalOfferings;
 
+    // Ahora generamos la tabla de Totales Financieros (reubicada)
     autoTable(doc, {
       startY: yPosition,
-      head: [["RESUMEN", "Monto"]],
+      head: [["CONCEPTO", "Monto"]],
       body: [
+        ["Total Diezmos", formatCurrency(totalTithes)],
+        ["Total Remesas", formatCurrency(totalRemittances)],
+        ["Total Cheques", formatCurrency(totalChecks)],
+        ["Total Ofrendas", formatCurrency(totalOfferings)],
+        ["TOTAL FINANCIERO", formatCurrency(totalFinancial)],
         ["Total Efectivo Contado", formatCurrency(totalCashCounted)],
-        ["Total Financiero", formatCurrency(totalFinancial)],
-        ["Diferencia", formatCurrency(difference)],
       ],
       theme: "plain",
       headStyles: {
@@ -354,20 +333,9 @@ async function generateDonationPDF(data: Donation) {
       },
       didParseCell: function (cellData: CellHookData) {
         if (cellData.row.index === 2) {
-          // Difference row (last row)
-          const diff = parseFloat(difference.toString());
-          if (Math.abs(diff) < 0.01) {
-            cellData.cell.styles.fillColor = [230, 255, 230]; // Light green
-          } else {
-            cellData.cell.styles.fillColor = [255, 230, 230]; // Light red
-          }
+          // Total financiero row
           cellData.cell.styles.fontStyle = "bold";
-          cellData.cell.styles.lineWidth = {
-            top: 0.1,
-            bottom: 0,
-            left: 0,
-            right: 0,
-          };
+          cellData.cell.styles.fillColor = [240, 240, 240];
         }
       },
     });
