@@ -30,7 +30,6 @@ export function RegisterDonation() {
     0
   );
 
-  // Calcular totales de monedas
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
   const coins005 = parseInt((form.watch("coins_005") as string) || "0");
   const coins010 = parseInt((form.watch("coins_010") as string) || "0");
@@ -44,7 +43,6 @@ export function RegisterDonation() {
     coins025 * 0.25 +
     coins100 * 1.0;
 
-  // Calcular totales de billetes
   const bills001 = parseInt((form.watch("bills_001") as string) || "0");
   const bills005 = parseInt((form.watch("bills_005") as string) || "0");
   const bills010 = parseInt((form.watch("bills_010") as string) || "0");
@@ -61,11 +59,12 @@ export function RegisterDonation() {
     bills100 * 100;
 
   const totalCashCounted = totalCoins + totalBills;
-  // Ofrendas = efectivo contado - diezmos (sin negativos)
+
   const totalOfferings = Math.max(
     totalCashCounted + totalRemittances + totalChecks - totalTithes,
     0
   );
+
   const totalFinancial = totalTithes + totalOfferings;
 
   return (
