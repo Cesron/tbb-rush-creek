@@ -83,10 +83,9 @@ export function RegisterDonation() {
 
         <AttendanceSection form={form} />
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <TithesDetailSection form={form} />
-          <OtherDonationsDetailSection form={form} />
-        </div>
+        <TithesDetailSection form={form} />
+
+        <OtherDonationsDetailSection form={form} />
 
         <CoinsBreakdownSection form={form} />
 

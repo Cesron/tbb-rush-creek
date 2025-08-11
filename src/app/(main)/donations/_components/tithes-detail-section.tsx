@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -98,17 +99,17 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
                 <TableRow key={index}>
                   <TableCell className="font-medium">{tithe.name}</TableCell>
                   <TableCell>
-                    <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize ${
+                    <Badge
+                      variant={
                         tithe.type === "efectivo"
-                          ? "bg-green-100 text-green-800"
+                          ? "green-subtle"
                           : tithe.type === "remesa"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-purple-100 text-purple-800"
-                      }`}
+                          ? "blue-subtle"
+                          : "purple-subtle"
+                      }
                     >
-                      {tithe.type}
-                    </span>
+                      {tithe.type.charAt(0).toUpperCase() + tithe.type.slice(1)}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right font-mono">
                     {currencyFormat(parseFloat(tithe.amount) || 0)}
