@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,17 +23,11 @@ interface TithesDetailSectionProps {
 }
 
 export function TithesDetailSection({ form }: TithesDetailSectionProps) {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
   const tithesDetail = form.watch("tithesDetail") || [];
   const totalTithesDetail = tithesDetail.reduce(
     (sum, tithe) => sum + (parseFloat(tithe.amount) || 0),
     0
   );
-
-  const openAddDialog = () => {
-    setIsAddDialogOpen(true);
-  };
 
   const handleDeleteTithe = (index: number) => {
     const currentTithes = form.getValues("tithesDetail") || [];
@@ -52,17 +45,7 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
             {currencyFormat(totalTithesDetail)}
           </span>
         </CardTitle>
-        {form.watch("tithesDetail") &&
-          form.watch("tithesDetail").length > 0 && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={openAddDialog}
-            >
-              Agregar Diezmo
-            </Button>
-          )}
+        <AddTitheDialog form={form} />
       </CardHeader>
       <CardContent className="space-y-4 flex-1 flex flex-col">
         {!form.watch("tithesDetail") ||
@@ -72,17 +55,9 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
             <h3 className="text-base font-medium text-muted-foreground mb-1">
               No hay diezmos registrados
             </h3>
-            <p className="text-xs text-muted-foreground mb-3">
+            <p className="text-xs text-muted-foreground">
               Agregue los detalles de los diezmos recibidos durante el servicio
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={openAddDialog}
-            >
-              Agregar Primer Diezmo
-            </Button>
           </div>
         ) : (
           <Table>
@@ -154,12 +129,6 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
 
         {/* Mensaje de diferencia eliminado: los totales ahora son automáticos */}
       </CardContent>
-
-      <AddTitheDialog
-        form={form}
-        isOpen={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-      />
     </Card>
   );
 }

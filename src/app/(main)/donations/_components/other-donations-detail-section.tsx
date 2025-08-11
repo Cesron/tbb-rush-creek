@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,14 +24,8 @@ interface OtherDonationsDetailSectionProps {
 export function OtherDonationsDetailSection({
   form,
 }: OtherDonationsDetailSectionProps) {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
   const detail = form.watch("otherDonationsDetail") || [];
   const total = detail.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
-
-  const openAddDialog = () => {
-    setIsAddDialogOpen(true);
-  };
 
   const handleDelete = (index: number) => {
     const current = form.getValues("otherDonationsDetail") || [];
@@ -50,16 +43,7 @@ export function OtherDonationsDetailSection({
             {currencyFormat(total)}
           </span>
         </CardTitle>
-        {detail.length > 0 && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={openAddDialog}
-          >
-            Agregar Donación
-          </Button>
-        )}
+        <AddOtherDonationDialog form={form} />
       </CardHeader>
       <CardContent className="space-y-4 flex-1 flex flex-col">
         {detail.length === 0 ? (
@@ -68,17 +52,9 @@ export function OtherDonationsDetailSection({
             <h3 className="text-base font-medium text-muted-foreground mb-1">
               No hay otras donaciones registradas
             </h3>
-            <p className="text-xs text-muted-foreground mb-3">
+            <p className="text-xs text-muted-foreground">
               Agregue las donaciones especiales recibidas durante el servicio
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={openAddDialog}
-            >
-              Agregar Primera Donación
-            </Button>
           </div>
         ) : (
           <Table>
@@ -143,12 +119,6 @@ export function OtherDonationsDetailSection({
           </Table>
         )}
       </CardContent>
-
-      <AddOtherDonationDialog
-        form={form}
-        isOpen={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-      />
     </Card>
   );
 }

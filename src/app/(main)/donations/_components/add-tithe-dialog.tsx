@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,15 +26,10 @@ import { Donation } from "../_lib/donations-schema";
 
 interface AddTitheDialogProps {
   form: UseFormReturn<Donation>;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-export function AddTitheDialog({
-  form,
-  isOpen,
-  onOpenChange,
-}: AddTitheDialogProps) {
+export function AddTitheDialog({ form }: AddTitheDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [newTitheName, setNewTitheName] = useState("");
   const [newTitheAmount, setNewTitheAmount] = useState("");
   const [newTitheType, setNewTitheType] = useState<
@@ -41,7 +37,7 @@ export function AddTitheDialog({
   >("efectivo");
 
   const closeDialog = () => {
-    onOpenChange(false);
+    setIsOpen(false);
     setNewTitheName("");
     setNewTitheAmount("");
     setNewTitheType("efectivo");
@@ -68,7 +64,12 @@ export function AddTitheDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button type="button" variant="outline" size="sm">
+          Agregar Diezmo
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Agregar Diezmo</DialogTitle>

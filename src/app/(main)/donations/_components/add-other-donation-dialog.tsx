@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,15 +26,10 @@ import { Donation } from "../_lib/donations-schema";
 
 interface AddOtherDonationDialogProps {
   form: UseFormReturn<Donation>;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-export function AddOtherDonationDialog({
-  form,
-  isOpen,
-  onOpenChange,
-}: AddOtherDonationDialogProps) {
+export function AddOtherDonationDialog({ form }: AddOtherDonationDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newAmount, setNewAmount] = useState("");
   const [newType, setNewType] = useState<"efectivo" | "remesa" | "cheque">(
@@ -41,7 +37,7 @@ export function AddOtherDonationDialog({
   );
 
   const closeDialog = () => {
-    onOpenChange(false);
+    setIsOpen(false);
     setNewName("");
     setNewAmount("");
     setNewType("efectivo");
@@ -64,7 +60,12 @@ export function AddOtherDonationDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button type="button" variant="outline" size="sm">
+          Agregar Donación
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Agregar Otra Donación</DialogTitle>
