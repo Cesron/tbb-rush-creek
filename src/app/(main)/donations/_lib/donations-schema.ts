@@ -39,6 +39,18 @@ export const donationSchema = z.object({
       type: z.enum(["efectivo", "remesa", "cheque"]),
     })
   ),
+  checksDetail: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.string(),
+    })
+  ).optional(),
+  remittancesDetail: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.string(),
+    })
+  ).optional(),
 });
 
 export type Donation = z.infer<typeof donationSchema>;
