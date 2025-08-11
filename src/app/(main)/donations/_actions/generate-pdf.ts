@@ -271,14 +271,18 @@ async function generateDonationPDF(data: Donation) {
     const totalTithes =
       data.tithesDetail?.reduce((s, t) => s + (parseFloat(t.amount) || 0), 0) ||
       0;
-    const totalRemittances =
-      data.remittancesDetail?.reduce(
-        (s, r) => s + (parseFloat(r.amount) || 0),
-        0
-      ) || 0;
-    const totalChecks =
-      data.checksDetail?.reduce((s, c) => s + (parseFloat(c.amount) || 0), 0) ||
-      0;
+
+    // Calcular remesas y cheques desde diezmos y otras donaciones
+    const allItems = [
+      ...(data.tithesDetail || []),
+      ...(data.otherDonationsDetail || []),
+    ];
+    const totalRemittances = allItems
+      .filter((item) => item.type === "remesa")
+      .reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+    const totalChecks = allItems
+      .filter((item) => item.type === "cheque")
+      .reduce((s, c) => s + (parseFloat(c.amount) || 0), 0);
     const totalOtherDonations =
       data.otherDonationsDetail?.reduce(
         (s, o) => s + (parseFloat(o.amount) || 0),
@@ -369,8 +373,6 @@ async function generateDonationPDF(data: Donation) {
 
     const hasAnyDetail =
       (data.tithesDetail?.length || 0) > 0 ||
-      (data.remittancesDetail?.length || 0) > 0 ||
-      (data.checksDetail?.length || 0) > 0 ||
       (data.otherDonationsDetail?.length || 0) > 0;
     if (hasAnyDetail) {
       doc.addPage();
@@ -446,16 +448,18 @@ async function generateDonationPDF(data: Donation) {
       data.otherDonationsDetail,
       "TOTAL OTRAS DONACIONES DETALLE"
     );
-    renderDetail(
-      "Detalle de Remesas",
-      data.remittancesDetail,
-      "TOTAL REMESAS DETALLE"
-    );
-    renderDetail(
-      "Detalle de Cheques",
-      data.checksDetail,
-      "TOTAL CHEQUES DETALLE"
-    );
+
+    // Renderizar remesas (filtradas de diezmos y otras donaciones)
+    const remesasItems = allItems.filter((item) => item.type === "remesa");
+    if (remesasItems.length > 0) {
+      renderDetail("Detalle de Remesas", remesasItems, "TOTAL REMESAS DETALLE");
+    }
+
+    // Renderizar cheques (filtrados de diezmos y otras donaciones)
+    const chequesItems = allItems.filter((item) => item.type === "cheque");
+    if (chequesItems.length > 0) {
+      renderDetail("Detalle de Cheques", chequesItems, "TOTAL CHEQUES DETALLE");
+    }
 
     const pdfBase64 = doc.output("datauristring");
     return {

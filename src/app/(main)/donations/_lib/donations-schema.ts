@@ -29,24 +29,14 @@ export const donationSchema = z.object({
     z.object({
       name: z.string(),
       amount: z.string(),
-    })
-  ),
-  remittancesDetail: z.array(
-    z.object({
-      name: z.string(),
-      amount: z.string(),
-    })
-  ),
-  checksDetail: z.array(
-    z.object({
-      name: z.string(),
-      amount: z.string(),
+      type: z.enum(["efectivo", "remesa", "cheque"]),
     })
   ),
   otherDonationsDetail: z.array(
     z.object({
       name: z.string(),
       amount: z.string(),
+      type: z.enum(["efectivo", "remesa", "cheque"]),
     })
   ),
 });

@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 
@@ -29,11 +36,15 @@ export function AddOtherDonationDialog({
 }: AddOtherDonationDialogProps) {
   const [newName, setNewName] = useState("");
   const [newAmount, setNewAmount] = useState("");
+  const [newType, setNewType] = useState<"efectivo" | "remesa" | "cheque">(
+    "efectivo"
+  );
 
   const closeDialog = () => {
     onOpenChange(false);
     setNewName("");
     setNewAmount("");
+    setNewType("efectivo");
   };
 
   const handleAdd = () => {
@@ -45,6 +56,7 @@ export function AddOtherDonationDialog({
     const newDonation = {
       name: newName.trim(),
       amount: newAmount,
+      type: newType,
     };
 
     form.setValue("otherDonationsDetail", [...current, newDonation]);
@@ -101,6 +113,25 @@ export function AddOtherDonationDialog({
                 $
               </span>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="otherDonationType">Tipo de registro</Label>
+            <Select
+              value={newType}
+              onValueChange={(value: "efectivo" | "remesa" | "cheque") =>
+                setNewType(value)
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione el tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="efectivo">Efectivo</SelectItem>
+                <SelectItem value="remesa">Remesa</SelectItem>
+                <SelectItem value="cheque">Cheque</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

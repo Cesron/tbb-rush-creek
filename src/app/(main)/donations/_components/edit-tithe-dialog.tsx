@@ -14,12 +14,23 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { FormLabel } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 
 interface EditTitheDialogProps {
   form: UseFormReturn<Donation>;
-  tithe: { name: string; amount: string };
+  tithe: {
+    name: string;
+    amount: string;
+    type: "efectivo" | "remesa" | "cheque";
+  };
   index: number;
   onEdit: () => void;
 }
@@ -32,6 +43,9 @@ export function EditTitheDialog({
 }: EditTitheDialogProps) {
   const [editTitheName, setEditTitheName] = useState("");
   const [editTitheAmount, setEditTitheAmount] = useState("");
+  const [editTitheType, setEditTitheType] = useState<
+    "efectivo" | "remesa" | "cheque"
+  >("efectivo");
 
   const handleEditTithe = () => {
     if (
@@ -47,17 +61,20 @@ export function EditTitheDialog({
     updatedTithes[index] = {
       name: editTitheName.trim(),
       amount: editTitheAmount,
+      type: editTitheType,
     };
 
     form.setValue("tithesDetail", updatedTithes);
     setEditTitheName("");
     setEditTitheAmount("");
+    setEditTitheType("efectivo");
     onEdit();
   };
 
   const resetForm = () => {
     setEditTitheName("");
     setEditTitheAmount("");
+    setEditTitheType("efectivo");
   };
 
   return (
@@ -70,6 +87,7 @@ export function EditTitheDialog({
           onClick={() => {
             setEditTitheName(tithe.name);
             setEditTitheAmount(tithe.amount);
+            setEditTitheType(tithe.type);
           }}
         >
           Editar
@@ -124,6 +142,24 @@ export function EditTitheDialog({
                 $
               </span>
             </div>
+          </div>
+          <div>
+            <FormLabel htmlFor="editTitheType">Tipo de registro</FormLabel>
+            <Select
+              value={editTitheType}
+              onValueChange={(value: "efectivo" | "remesa" | "cheque") =>
+                setEditTitheType(value)
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione el tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="efectivo">Efectivo</SelectItem>
+                <SelectItem value="remesa">Remesa</SelectItem>
+                <SelectItem value="cheque">Cheque</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

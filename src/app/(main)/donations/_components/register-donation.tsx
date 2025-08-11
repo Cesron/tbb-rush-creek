@@ -9,8 +9,6 @@ import { BillsBreakdownSection } from "./bills-breakdown-section";
 import { TithesDetailSection } from "./tithes-detail-section";
 import { OtherDonationsDetailSection } from "./other-donations-detail-section";
 import { FinalSummarySection } from "./final-summary-section";
-import { RemittancesDetailSection } from "./remittances-detail-section";
-import { ChecksDetailSection } from "./checks-detail-section";
 
 export function RegisterDonation() {
   const { form, onSubmit } = useRegisterDonation();
@@ -20,21 +18,22 @@ export function RegisterDonation() {
     (sum, tithe) => sum + (parseFloat(tithe.amount) || 0),
     0
   );
-  const remittancesDetail = form.watch("remittancesDetail") || [];
-  const totalRemittances = remittancesDetail.reduce(
-    (sum, r) => sum + (parseFloat(r.amount) || 0),
-    0
-  );
-  const checksDetail = form.watch("checksDetail") || [];
-  const totalChecks = checksDetail.reduce(
-    (sum, c) => sum + (parseFloat(c.amount) || 0),
-    0
-  );
+
+  // Calcular totales por tipo desde diezmos y otras donaciones
   const otherDonationsDetail = form.watch("otherDonationsDetail") || [];
   const totalOtherDonations = otherDonationsDetail.reduce(
     (sum, o) => sum + (parseFloat(o.amount) || 0),
     0
   );
+
+  // Calcular remesas y cheques desde diezmos y otras donaciones
+  const totalRemittances = [...tithesDetail, ...otherDonationsDetail]
+    .filter((item) => item.type === "remesa")
+    .reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+
+  const totalChecks = [...tithesDetail, ...otherDonationsDetail]
+    .filter((item) => item.type === "cheque")
+    .reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
 
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
   const coins005 = parseInt((form.watch("coins_005") as string) || "0");
@@ -87,12 +86,6 @@ export function RegisterDonation() {
         <div className="grid gap-4 md:grid-cols-2">
           <TithesDetailSection form={form} />
           <OtherDonationsDetailSection form={form} />
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <RemittancesDetailSection form={form} />
-
-          <ChecksDetailSection form={form} />
         </div>
 
         <CoinsBreakdownSection form={form} />

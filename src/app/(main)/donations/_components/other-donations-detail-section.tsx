@@ -85,6 +85,7 @@ export function OtherDonationsDetailSection({
             <TableHeader>
               <TableRow>
                 <TableHead>Nombre / Descripción</TableHead>
+                <TableHead>Tipo</TableHead>
                 <TableHead className="text-right">Cantidad</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
@@ -93,6 +94,19 @@ export function OtherDonationsDetailSection({
               {detail.map((donation, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{donation.name}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize ${
+                        donation.type === "efectivo"
+                          ? "bg-green-100 text-green-800"
+                          : donation.type === "remesa"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-purple-100 text-purple-800"
+                      }`}
+                    >
+                      {donation.type}
+                    </span>
+                  </TableCell>
                   <TableCell className="text-right font-mono">
                     {currencyFormat(parseFloat(donation.amount) || 0)}
                   </TableCell>

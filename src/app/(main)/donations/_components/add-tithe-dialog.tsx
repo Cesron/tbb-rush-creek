@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 
@@ -29,11 +36,15 @@ export function AddTitheDialog({
 }: AddTitheDialogProps) {
   const [newTitheName, setNewTitheName] = useState("");
   const [newTitheAmount, setNewTitheAmount] = useState("");
+  const [newTitheType, setNewTitheType] = useState<
+    "efectivo" | "remesa" | "cheque"
+  >("efectivo");
 
   const closeDialog = () => {
     onOpenChange(false);
     setNewTitheName("");
     setNewTitheAmount("");
+    setNewTitheType("efectivo");
   };
 
   const handleAddTithe = () => {
@@ -49,6 +60,7 @@ export function AddTitheDialog({
     const newTithe = {
       name: newTitheName.trim(),
       amount: newTitheAmount,
+      type: newTitheType,
     };
 
     form.setValue("tithesDetail", [...currentTithes, newTithe]);
@@ -105,6 +117,25 @@ export function AddTitheDialog({
                 $
               </span>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="titheType">Tipo de registro</Label>
+            <Select
+              value={newTitheType}
+              onValueChange={(value: "efectivo" | "remesa" | "cheque") =>
+                setNewTitheType(value)
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione el tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="efectivo">Efectivo</SelectItem>
+                <SelectItem value="remesa">Remesa</SelectItem>
+                <SelectItem value="cheque">Cheque</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

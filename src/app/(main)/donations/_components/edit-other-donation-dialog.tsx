@@ -14,12 +14,23 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { FormLabel } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 
 interface EditOtherDonationDialogProps {
   form: UseFormReturn<Donation>;
-  donation: { name: string; amount: string };
+  donation: {
+    name: string;
+    amount: string;
+    type: "efectivo" | "remesa" | "cheque";
+  };
   index: number;
   onEdit: () => void;
 }
@@ -32,6 +43,9 @@ export function EditOtherDonationDialog({
 }: EditOtherDonationDialogProps) {
   const [editName, setEditName] = useState("");
   const [editAmount, setEditAmount] = useState("");
+  const [editType, setEditType] = useState<"efectivo" | "remesa" | "cheque">(
+    "efectivo"
+  );
 
   const handleEdit = () => {
     if (!editName.trim() || !editAmount || parseFloat(editAmount) <= 0) {
@@ -43,17 +57,20 @@ export function EditOtherDonationDialog({
     updated[index] = {
       name: editName.trim(),
       amount: editAmount,
+      type: editType,
     };
 
     form.setValue("otherDonationsDetail", updated);
     setEditName("");
     setEditAmount("");
+    setEditType("efectivo");
     onEdit();
   };
 
   const resetForm = () => {
     setEditName("");
     setEditAmount("");
+    setEditType("efectivo");
   };
 
   return (
@@ -66,6 +83,7 @@ export function EditOtherDonationDialog({
           onClick={() => {
             setEditName(donation.name);
             setEditAmount(donation.amount);
+            setEditType(donation.type);
           }}
         >
           Editar
@@ -120,6 +138,26 @@ export function EditOtherDonationDialog({
                 $
               </span>
             </div>
+          </div>
+          <div>
+            <FormLabel htmlFor="editOtherDonationType">
+              Tipo de registro
+            </FormLabel>
+            <Select
+              value={editType}
+              onValueChange={(value: "efectivo" | "remesa" | "cheque") =>
+                setEditType(value)
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione el tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="efectivo">Efectivo</SelectItem>
+                <SelectItem value="remesa">Remesa</SelectItem>
+                <SelectItem value="cheque">Cheque</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
