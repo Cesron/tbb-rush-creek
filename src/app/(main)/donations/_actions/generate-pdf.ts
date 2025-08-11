@@ -36,7 +36,7 @@ async function generateDonationPDF(data: Donation) {
     // Información del Servicio
     doc.setFontSize(10).setTextColor(40, 40, 40).setFont("helvetica", "bold");
     doc.text("Información del Servicio", 20, yPosition);
-    yPosition += 10; // extra space after service info section
+    yPosition += 6; // reduced space after service info section
     doc.setFontSize(9).setTextColor(60, 60, 60).setFont("helvetica", "normal");
 
     const col1LabelX = 20;
@@ -75,7 +75,7 @@ async function generateDonationPDF(data: Donation) {
       doc.text(descLines, col1ValueX, yPosition);
       yPosition += descLines.length * 4 + 1;
     }
-    yPosition += 6;
+    yPosition += 4;
 
     // Asistencia
     doc.setFontSize(10).setFont("helvetica", "bold").setTextColor(40, 40, 40);
@@ -129,7 +129,7 @@ async function generateDonationPDF(data: Donation) {
         }
       },
     });
-    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 12; // more gap after attendance table
+    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 8; // reduced gap after attendance table
 
     // Desglose de Efectivo (dos tablas lado a lado)
     doc
@@ -265,7 +265,7 @@ async function generateDonationPDF(data: Donation) {
       },
     });
     const billsTableY = doc.lastAutoTable?.finalY || cashStartY;
-    yPosition = Math.max(coinsTableY, billsTableY) + 12; // more gap after cash breakdown
+    yPosition = Math.max(coinsTableY, billsTableY) + 8; // reduced gap after cash breakdown
 
     // Totales Financieros
     const totalTithes =
@@ -303,45 +303,117 @@ async function generateDonationPDF(data: Donation) {
       .setFont("helvetica", "bold")
       .text("Totales Financieros", 20, yPosition);
     yPosition += 4;
+
+    // Calcular dimensiones para tablas lado a lado
+    const pageWidthFinancial: number = (
+      doc as unknown as { internal: { pageSize: { getWidth: () => number } } }
+    ).internal.pageSize.getWidth();
+    const contentWidthFinancial = pageWidthFinancial - 40; // margins
+    const gapFinancial = 6;
+    const halfWidthFinancial = (contentWidthFinancial - gapFinancial) / 2;
+    const leftXFinancial = 20;
+    const rightXFinancial = 20 + halfWidthFinancial + gapFinancial;
+    const financialStartY = yPosition;
+
+    // Primera tabla: Desglose (lado izquierdo)
     autoTable(doc, {
-      startY: yPosition,
-      head: [["CONCEPTO", "Monto"]],
+      startY: financialStartY,
+      head: [["DESGLOSE", "Monto"]],
       body: [
-        ["Total Diezmos", formatCurrency(totalTithes)],
-        ["Total Remesas", formatCurrency(totalRemittances)],
-        ["Total Cheques", formatCurrency(totalChecks)],
-        ["Total Otras Donaciones", formatCurrency(totalOtherDonations)],
-        ["Total Ofrendas", formatCurrency(totalOfferings)],
-        ["TOTAL FINANCIERO", formatCurrency(totalFinancial)],
-        ["Total Efectivo Contado", formatCurrency(totalCashCounted)],
+        ["Subtotal Monedas", formatCurrency(totalCoins)],
+        ["Subtotal Billetes", formatCurrency(totalBills)],
+        ["Total efectivo contado", formatCurrency(totalCashCounted)],
+        ["Remesas", formatCurrency(totalRemittances)],
+        ["Cheques", formatCurrency(totalChecks)],
+        [
+          "TOTAL DEL DESGLOSE",
+          formatCurrency(totalCashCounted + totalRemittances + totalChecks),
+        ],
       ],
       theme: "plain",
+      tableWidth: halfWidthFinancial,
+      margin: { left: leftXFinancial },
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 8,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
-      margin: { left: 20, right: 20 },
       styles: {
-        fontSize: 8,
-        cellPadding: 2,
+        fontSize: 7,
+        cellPadding: 1.5,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       columnStyles: {
-        0: { fontStyle: "bold" },
-        1: { cellWidth: 50, halign: "right" },
+        0: { cellWidth: halfWidthFinancial * 0.65, fontStyle: "bold" },
+        1: { cellWidth: halfWidthFinancial * 0.35, halign: "right" },
       },
       didParseCell: (cell: CellHookData) => {
-        if (cell.row.index === 4) {
+        if (cell.row.index === 2 || cell.row.index === 5) {
+          // Total efectivo contado y Total del desglose
           cell.cell.styles.fontStyle = "bold";
           cell.cell.styles.fillColor = [240, 240, 240];
+          cell.cell.styles.lineWidth = {
+            top: 0.1,
+            bottom: 0.1,
+            left: 0,
+            right: 0,
+          };
         }
       },
     });
-    yPosition = (doc.lastAutoTable?.finalY || yPosition) + 12; // more gap after totals table
+
+    // Segunda tabla: Totales por concepto (lado derecho)
+    autoTable(doc, {
+      startY: financialStartY,
+      head: [["TOTALES", "Monto"]],
+      body: [
+        ["Ofrendas", formatCurrency(totalOfferings)],
+        ["Diezmos", formatCurrency(totalTithes)],
+        ["Otras Donaciones", formatCurrency(totalOtherDonations)],
+        ["TOTAL REGISTRADO", formatCurrency(totalFinancial)],
+      ],
+      theme: "plain",
+      tableWidth: halfWidthFinancial,
+      margin: { left: rightXFinancial },
+      headStyles: {
+        fillColor: [220, 220, 220],
+        textColor: [0, 0, 0],
+        fontSize: 8,
+        lineColor: [0, 0, 0],
+        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+      },
+      styles: {
+        fontSize: 7,
+        cellPadding: 1.5,
+        lineColor: [0, 0, 0],
+        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+      },
+      columnStyles: {
+        0: { cellWidth: halfWidthFinancial * 0.65, fontStyle: "bold" },
+        1: { cellWidth: halfWidthFinancial * 0.35, halign: "right" },
+      },
+      didParseCell: (cell: CellHookData) => {
+        if (cell.row.index === 3) {
+          // Total registrado
+          cell.cell.styles.fontStyle = "bold";
+          cell.cell.styles.fillColor = [240, 240, 240];
+          cell.cell.styles.lineWidth = {
+            top: 0.1,
+            bottom: 0.1,
+            left: 0,
+            right: 0,
+          };
+        }
+      },
+    });
+
+    const desgloseTableY = doc.lastAutoTable?.finalY || financialStartY;
+    // Note: doc.lastAutoTable will have the info from the last table rendered (TOTALES table)
+    // Since both tables start at the same Y position, we take the finalY from the last one
+    yPosition = desgloseTableY + 20; // increased gap after totals tables to avoid overlap with signatures
 
     // Firmas (primera página)
     doc
@@ -349,14 +421,14 @@ async function generateDonationPDF(data: Donation) {
       .setFont("helvetica", "bold")
       .setTextColor(40, 40, 40)
       .text("Firmas de los Servidores", 20, yPosition);
-    yPosition += 5; // slightly more space under section title
+    yPosition += 4; // reduced space under section title
     doc
       .setFontSize(8.5)
       .text("NOMBRE", 25, yPosition)
       .text("FIRMA", 120, yPosition);
-    yPosition += 6; // more gap so first line leaves room for handwriting
+    yPosition += 5; // reduced gap so first line leaves room for handwriting
     doc.setFont("helvetica", "normal").setDrawColor(0, 0, 0);
-    const signatureLineHeight = 9; // increased vertical spacing per signer
+    const signatureLineHeight = 8; // reduced vertical spacing per signer
     for (let i = 0; i < 3; i++) {
       doc.line(20, yPosition, 90, yPosition); // name line
       doc.line(110, yPosition, 190, yPosition); // signature line

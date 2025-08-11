@@ -41,6 +41,7 @@ export function EditTitheDialog({
   index,
   onEdit,
 }: EditTitheDialogProps) {
+  const [open, setOpen] = useState(false);
   const [editTitheName, setEditTitheName] = useState("");
   const [editTitheAmount, setEditTitheAmount] = useState("");
   const [editTitheType, setEditTitheType] = useState<
@@ -68,6 +69,7 @@ export function EditTitheDialog({
     setEditTitheName("");
     setEditTitheAmount("");
     setEditTitheType("efectivo");
+    setOpen(false);
     onEdit();
   };
 
@@ -78,7 +80,7 @@ export function EditTitheDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -169,19 +171,17 @@ export function EditTitheDialog({
               Cancelar
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button
-              type="button"
-              onClick={handleEditTithe}
-              disabled={
-                !editTitheName.trim() ||
-                !editTitheAmount ||
-                parseFloat(editTitheAmount) <= 0
-              }
-            >
-              Guardar Cambios
-            </Button>
-          </DialogClose>
+          <Button
+            type="button"
+            onClick={handleEditTithe}
+            disabled={
+              !editTitheName.trim() ||
+              !editTitheAmount ||
+              parseFloat(editTitheAmount) <= 0
+            }
+          >
+            Guardar Cambios
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

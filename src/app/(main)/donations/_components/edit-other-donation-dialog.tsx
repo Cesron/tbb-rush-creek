@@ -41,6 +41,7 @@ export function EditOtherDonationDialog({
   index,
   onEdit,
 }: EditOtherDonationDialogProps) {
+  const [open, setOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editAmount, setEditAmount] = useState("");
   const [editType, setEditType] = useState<"efectivo" | "remesa" | "cheque">(
@@ -64,6 +65,7 @@ export function EditOtherDonationDialog({
     setEditName("");
     setEditAmount("");
     setEditType("efectivo");
+    setOpen(false);
     onEdit();
   };
 
@@ -74,7 +76,7 @@ export function EditOtherDonationDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -167,17 +169,15 @@ export function EditOtherDonationDialog({
               Cancelar
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button
-              type="button"
-              onClick={handleEdit}
-              disabled={
-                !editName.trim() || !editAmount || parseFloat(editAmount) <= 0
-              }
-            >
-              Guardar Cambios
-            </Button>
-          </DialogClose>
+          <Button
+            type="button"
+            onClick={handleEdit}
+            disabled={
+              !editName.trim() || !editAmount || parseFloat(editAmount) <= 0
+            }
+          >
+            Guardar Cambios
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -13,20 +13,24 @@ import { FinalSummarySection } from "./final-summary-section";
 export function RegisterDonation() {
   const { form, onSubmit } = useRegisterDonation();
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
+
   const tithesDetail = form.watch("tithesDetail") || [];
   const totalTithes = tithesDetail.reduce(
     (sum, tithe) => sum + (parseFloat(tithe.amount) || 0),
     0
   );
 
-  // Calcular totales por tipo desde diezmos y otras donaciones
   const otherDonationsDetail = form.watch("otherDonationsDetail") || [];
   const totalOtherDonations = otherDonationsDetail.reduce(
     (sum, o) => sum + (parseFloat(o.amount) || 0),
     0
   );
 
-  // Calcular remesas y cheques desde diezmos y otras donaciones
   const totalRemittances = [...tithesDetail, ...otherDonationsDetail]
     .filter((item) => item.type === "remesa")
     .reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
@@ -78,7 +82,11 @@ export function RegisterDonation() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        onKeyDown={handleKeyDown}
+        className="space-y-4"
+      >
         <ServiceInfoSection form={form} />
 
         <AttendanceSection form={form} />
@@ -100,6 +108,9 @@ export function RegisterDonation() {
           totalRemittances={totalRemittances}
           totalChecks={totalChecks}
           totalOtherDonations={totalOtherDonations}
+          onSubmit={async () => {
+            await form.handleSubmit(onSubmit)();
+          }}
         />
       </form>
     </Form>

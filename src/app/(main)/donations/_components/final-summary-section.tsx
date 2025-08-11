@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -11,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { currencyFormat } from "@/utils/currency-format";
-import { CoinsIcon, SendIcon } from "lucide-react";
+import { CoinsIcon, SendIcon, Loader2 } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 
@@ -24,6 +25,7 @@ interface FinalSummarySectionProps {
   totalRemittances: number;
   totalChecks: number;
   totalOtherDonations: number;
+  onSubmit: () => Promise<void> | void;
 }
 
 export function FinalSummarySection({
@@ -35,7 +37,18 @@ export function FinalSummarySection({
   totalRemittances,
   totalChecks,
   totalOtherDonations,
+  onSubmit,
 }: FinalSummarySectionProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      await onSubmit();
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
   const coins005 = parseInt((form.watch("coins_005") as string) || "0");
   const coins010 = parseInt((form.watch("coins_010") as string) || "0");
@@ -71,9 +84,13 @@ export function FinalSummarySection({
           <CoinsIcon className="h-5 w-5" />
           Resumen Final de Donaciones
         </CardTitle>
-        <Button type="submit">
-          <SendIcon className="h-5 w-5 mr-2" />
-          Finalizar registro
+        <Button type="button" onClick={handleSubmit} disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+          ) : (
+            <SendIcon className="h-5 w-5 mr-2" />
+          )}
+          {isLoading ? "Procesando..." : "Finalizar registro"}
         </Button>
       </CardHeader>
       <CardContent className="space-y-6">
