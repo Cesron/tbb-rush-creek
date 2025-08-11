@@ -110,7 +110,9 @@ export function TithesDetailSection({ form }: TithesDetailSectionProps) {
                 </TableRow>
               ))}
               <TableRow>
-                <TableCell className="font-semibold">Total Diezmos</TableCell>
+                <TableCell className="font-semibold" colSpan={2}>
+                  Total Diezmos
+                </TableCell>
                 <TableCell className="text-right font-semibold font-mono">
                   {currencyFormat(
                     form

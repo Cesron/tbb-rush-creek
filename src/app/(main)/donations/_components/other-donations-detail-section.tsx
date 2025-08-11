@@ -107,7 +107,7 @@ export function OtherDonationsDetailSection({
                 </TableRow>
               ))}
               <TableRow>
-                <TableCell className="font-semibold">
+                <TableCell className="font-semibold" colSpan={2}>
                   Total Otras Donaciones
                 </TableCell>
                 <TableCell className="text-right font-semibold font-mono">
