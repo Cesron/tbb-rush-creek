@@ -11,6 +11,9 @@ export const donationSchema = z.object({
   adultAttendance: z.string().optional(),
   templeServers: z.string().optional(),
   bibleSchoolServers: z.string().optional(),
+  faithProfessions: z.string().optional(),
+  baptisms: z.string().optional(),
+  lordsSupper: z.string().optional(),
 
   coins_001: z.string().optional(),
   coins_005: z.string().optional(),

@@ -4,6 +4,7 @@ import { Form } from "@/components/ui/form";
 import { useRegisterDonation } from "../_hooks/use-register-donation";
 import { ServiceInfoSection } from "./service-info-section";
 import { AttendanceSection } from "./attendance-section";
+import { MinisterialActivitiesSection } from "./ministerial-activities-section";
 import { CoinsBreakdownSection } from "./coins-breakdown-section";
 import { BillsBreakdownSection } from "./bills-breakdown-section";
 import { TithesDetailSection } from "./tithes-detail-section";
@@ -29,6 +30,8 @@ export function RegisterDonation() {
         <ServiceInfoSection form={form} />
 
         <AttendanceSection form={form} />
+
+        <MinisterialActivitiesSection form={form} />
 
         <TithesDetailSection form={form} />
 

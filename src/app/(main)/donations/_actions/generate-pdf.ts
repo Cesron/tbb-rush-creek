@@ -77,9 +77,9 @@ async function generateDonationPDF(data: Donation) {
     }
     yPosition += 4;
 
-    // Asistencia
+    // Asistencia y Actividades Ministeriales
     doc.setFontSize(10).setFont("helvetica", "bold").setTextColor(40, 40, 40);
-    doc.text("Asistencia", 20, yPosition);
+    doc.text("Resumen del Servicio", 20, yPosition);
     yPosition += 4;
     const childrenAttendance = parseInt(data.childrenAttendance || "0");
     const adultAttendance = parseInt(data.adultAttendance || "0");
@@ -87,17 +87,38 @@ async function generateDonationPDF(data: Donation) {
     const bibleSchoolServers = parseInt(data.bibleSchoolServers || "0");
     const totalAttendance =
       childrenAttendance + adultAttendance + templeServers + bibleSchoolServers;
+
+    const faithProfessions = parseInt(data.faithProfessions || "0");
+    const baptisms = parseInt(data.baptisms || "0");
+    const holyCommunion = parseInt(data.lordsSupper || "0");
+    const totalMinisterialActivities =
+      faithProfessions + baptisms + holyCommunion;
+
+    // Configuración para las dos tablas lado a lado
+    const pageWidthSummary: number = (
+      doc as unknown as { internal: { pageSize: { getWidth: () => number } } }
+    ).internal.pageSize.getWidth();
+    const contentWidthSummary = pageWidthSummary - 40; // margins
+    const gapSummary = 6;
+    const halfWidthSummary = (contentWidthSummary - gapSummary) / 2;
+    const leftXSummary = 20;
+    const rightXSummary = 20 + halfWidthSummary + gapSummary;
+    const summaryStartY = yPosition;
+
+    // Tabla de Asistencia (izquierda)
     autoTable(doc, {
-      startY: yPosition,
-      head: [["Tipo", "Cantidad"]],
+      startY: summaryStartY,
+      head: [["Asistencia", "Cant."]],
       body: [
-        ["Asistencia de Niños", childrenAttendance.toString()],
-        ["Asistencia de Adultos", adultAttendance.toString()],
-        ["Servidores del Templo", templeServers.toString()],
-        ["Servidores Escuela Bíblica", bibleSchoolServers.toString()],
+        ["Niños", childrenAttendance.toString()],
+        ["Adultos", adultAttendance.toString()],
+        ["Serv. Templo", templeServers.toString()],
+        ["Serv. Esc. Bíblica", bibleSchoolServers.toString()],
         ["TOTAL ASISTENCIA", totalAttendance.toString()],
       ],
       theme: "plain",
+      tableWidth: halfWidthSummary,
+      margin: { left: leftXSummary },
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
@@ -105,7 +126,6 @@ async function generateDonationPDF(data: Donation) {
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
-      margin: { left: 20, right: 20 },
       styles: {
         fontSize: 8,
         cellPadding: 2,
@@ -114,7 +134,52 @@ async function generateDonationPDF(data: Donation) {
       },
       columnStyles: {
         0: { fontStyle: "bold" },
-        1: { cellWidth: 30, halign: "center" },
+        1: { halign: "center" },
+      },
+      didParseCell: (cell: CellHookData) => {
+        if (cell.row.index === 4) {
+          cell.cell.styles.fontStyle = "bold";
+          cell.cell.styles.fillColor = [240, 240, 240];
+          cell.cell.styles.lineWidth = {
+            top: 0.1,
+            bottom: 0,
+            left: 0,
+            right: 0,
+          };
+        }
+      },
+    });
+
+    // Tabla de Actividades Ministeriales (derecha)
+    autoTable(doc, {
+      startY: summaryStartY,
+      head: [["Actividades Ministeriales", "Cant."]],
+      body: [
+        ["Profesiones de Fe", faithProfessions.toString()],
+        ["Bautismos", baptisms.toString()],
+        ["Santa Cena", holyCommunion.toString()],
+        ["", ""],
+        ["TOTAL ACTIVIDADES", totalMinisterialActivities.toString()],
+      ],
+      theme: "plain",
+      tableWidth: halfWidthSummary,
+      margin: { left: rightXSummary },
+      headStyles: {
+        fillColor: [220, 220, 220],
+        textColor: [0, 0, 0],
+        fontSize: 9,
+        lineColor: [0, 0, 0],
+        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+      },
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        lineColor: [0, 0, 0],
+        lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
+      },
+      columnStyles: {
+        0: { fontStyle: "bold" },
+        1: { halign: "center" },
       },
       didParseCell: (cell: CellHookData) => {
         if (cell.row.index === 4) {
