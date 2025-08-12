@@ -4,6 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -12,43 +20,59 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { currencyFormat } from "@/utils/currency-format";
-import { CoinsIcon, SendIcon, Loader2 } from "lucide-react";
+import { CoinsIcon, SendIcon, Loader2, CheckCircle } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 
 interface FinalSummarySectionProps {
   form: UseFormReturn<Donation>;
-  totalTithes: number;
-  totalOfferings: number;
-  totalCashCounted: number;
-  totalFinancial: number;
-  totalRemittances: number;
-  totalChecks: number;
-  totalOtherDonations: number;
   onSubmit: () => Promise<void> | void;
 }
 
 export function FinalSummarySection({
   form,
-  totalTithes,
-  totalOfferings,
-  totalCashCounted,
-  totalFinancial,
-  totalRemittances,
-  totalChecks,
-  totalOtherDonations,
+
   onSubmit,
 }: FinalSummarySectionProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [showSubmitDialog, setShowSubmitDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
+  const handleSubmitClick = () => {
+    setShowSubmitDialog(true);
+  };
+
+  const handleConfirmSubmit = async () => {
+    setIsSubmitting(true);
     try {
       await onSubmit();
+      setShowSubmitDialog(false);
+    } catch (error) {
+      console.error("Error submitting form:", error);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  const tithesDetail = form.watch("tithesDetail") || [];
+  const totalTithes = tithesDetail.reduce(
+    (sum, tithe) => sum + (parseFloat(tithe.amount) || 0),
+    0
+  );
+
+  const otherDonationsDetail = form.watch("otherDonationsDetail") || [];
+  const totalOtherDonations = otherDonationsDetail.reduce(
+    (sum, o) => sum + (parseFloat(o.amount) || 0),
+    0
+  );
+
+  const totalRemittances = [...tithesDetail, ...otherDonationsDetail]
+    .filter((item) => item.type === "remesa")
+    .reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+
+  const totalChecks = [...tithesDetail, ...otherDonationsDetail]
+    .filter((item) => item.type === "cheque")
+    .reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+
   const coins001 = parseInt((form.watch("coins_001") as string) || "0");
   const coins005 = parseInt((form.watch("coins_005") as string) || "0");
   const coins010 = parseInt((form.watch("coins_010") as string) || "0");
@@ -77,6 +101,19 @@ export function FinalSummarySection({
     bills050 * 50 +
     bills100 * 100;
 
+  const totalCashCounted = totalCoins + totalBills;
+
+  const totalOfferings = Math.max(
+    totalCashCounted +
+      totalRemittances +
+      totalChecks -
+      totalTithes -
+      totalOtherDonations,
+    0
+  );
+
+  const totalFinancial = totalTithes + totalOfferings + totalOtherDonations;
+
   return (
     <Card className="my-4">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -84,13 +121,9 @@ export function FinalSummarySection({
           <CoinsIcon className="h-5 w-5" />
           Resumen Final de Donaciones
         </CardTitle>
-        <Button type="button" onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? (
-            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-          ) : (
-            <SendIcon className="h-5 w-5 mr-2" />
-          )}
-          {isLoading ? "Procesando..." : "Finalizar registro"}
+        <Button type="button" onClick={handleSubmitClick}>
+          <SendIcon />
+          Finalizar registro
         </Button>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -190,6 +223,44 @@ export function FinalSummarySection({
           </div>
         </div>
       </CardContent>
+
+      <Dialog open={showSubmitDialog} onOpenChange={setShowSubmitDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              Confirmar Registro de Donaciones
+            </DialogTitle>
+            <DialogDescription>
+              ¿Está seguro que desea finalizar y guardar el registro de
+              donaciones? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowSubmitDialog(false)}
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              onClick={handleConfirmSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <CheckCircle />
+              )}
+              Confirmar y Guardar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
