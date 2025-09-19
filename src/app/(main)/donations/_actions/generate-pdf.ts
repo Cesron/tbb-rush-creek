@@ -122,12 +122,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 10,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 8,
+        fontSize: 9,
         cellPadding: 2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -167,12 +167,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 10,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 8,
+        fontSize: 9,
         cellPadding: 2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -261,12 +261,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 8,
+        fontSize: 9,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 7,
+        fontSize: 8,
         cellPadding: 1.2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -301,12 +301,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 8,
+        fontSize: 9,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 7,
+        fontSize: 8,
         cellPadding: 1.2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -401,12 +401,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 8,
+        fontSize: 9,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 7,
+        fontSize: 8,
         cellPadding: 1.5,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -446,12 +446,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 8,
+        fontSize: 9,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 7,
+        fontSize: 8,
         cellPadding: 1.5,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -541,13 +541,13 @@ async function generateDonationPDF(data: Donation) {
         headStyles: {
           fillColor: [220, 220, 220],
           textColor: [0, 0, 0],
-          fontSize: 9,
+          fontSize: 10,
           lineColor: [0, 0, 0],
           lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
         },
         margin: { left: 20, right: 20 },
         styles: {
-          fontSize: 8,
+          fontSize: 9,
           cellPadding: 2,
           lineColor: [0, 0, 0],
           lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
