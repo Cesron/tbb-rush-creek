@@ -18,6 +18,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { EyeIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function LoginForm() {
   const { form, onSubmit, setShowPassword, showPassword, loading } =
@@ -73,6 +74,29 @@ export function LoginForm() {
                   </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
+
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="rememberMe"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field orientation="horizontal">
+              <Checkbox
+                id="form-login-remember-me"
+                name={field.name}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldLabel
+                htmlFor="form-login-remember-me"
+                className="font-normal"
+              >
+                Recuérdame
+              </FieldLabel>
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

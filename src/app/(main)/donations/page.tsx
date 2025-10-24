@@ -1,9 +1,9 @@
-import { verifySession } from "@/lib/auth-utils";
+// import { verifySession } from "@/lib/auth-utils";
 import { DonationsHeader } from "./_components/donations-header";
 import { RegisterDonation } from "./_components/register-donation";
 
 export default async function Home() {
-  await verifySession();
+  // await verifySession();
 
   return (
     <>
