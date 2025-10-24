@@ -16,12 +16,6 @@ import { GaugeIcon, HandCoinsIcon, UsersIcon } from "lucide-react";
 import { ActiveSidebarMenuItem } from "./active-sidebar-menu-button";
 
 const data = {
-  user: {
-    name: "Mark Bannert",
-    email: "mark@bannert.com",
-    avatar:
-      "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp3/user_itiiaq.png",
-  },
   navMain: [
     {
       title: "General",
@@ -120,7 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
