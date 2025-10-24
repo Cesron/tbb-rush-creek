@@ -8,5 +8,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  advanced: {
+    database: {
+      generateId: () => crypto.randomUUID(),
+    },
+  },
   plugins: [admin(), nextCookies()],
 });

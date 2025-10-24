@@ -1,7 +1,10 @@
+import { verifySession } from "@/lib/auth-utils";
 import { DonationsHeader } from "./_components/donations-header";
 import { RegisterDonation } from "./_components/register-donation";
 
-export default function Home() {
+export default async function Home() {
+  await verifySession();
+
   return (
     <>
       <DonationsHeader />

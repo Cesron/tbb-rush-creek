@@ -10,8 +10,11 @@ import { Separator } from "@/components/ui/separator";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { verifySession } from "@/lib/auth-utils";
 
-export default function Home() {
+export default async function Home() {
+  const session = await verifySession();
+
   return (
     <>
       <header className="flex flex-wrap gap-3 min-h-20 py-4 shrink-0 items-center transition-all ease-linear border-b">
@@ -39,7 +42,11 @@ export default function Home() {
         <Button>Do something</Button>
       </header>
       <div className="overflow-hidden">
-        <div className="grid auto-rows-min @2xl:grid-cols-2 *:-ms-px *:-mt-px -m-px"></div>
+        <div className="grid auto-rows-min @2xl:grid-cols-2 *:-ms-px *:-mt-px -m-px">
+          <pre>
+            <code>{JSON.stringify(session, null, 2)}</code>
+          </pre>
+        </div>
       </div>
     </>
   );
