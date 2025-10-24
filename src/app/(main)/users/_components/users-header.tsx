@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { PlusCircleIcon } from "lucide-react";
 
 export function UsersHeader() {
   return (
@@ -35,7 +36,10 @@ export function UsersHeader() {
         </div>
       </div>
 
-      <Button>Do something</Button>
+      <Button>
+        <PlusCircleIcon />
+        Agregar Usuario
+      </Button>
     </header>
   );
 }
