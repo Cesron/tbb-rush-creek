@@ -32,7 +32,7 @@ export function useRegisterDonation() {
   const form = useForm<Donation>({
     resolver: zodResolver(donationSchema),
     defaultValues: {
-      serviceDate: new Date().toISOString().slice(0, 10),
+      serviceDate: new Date().toLocaleDateString(),
       sermonTopic: "",
       preacher: "",
       serviceType: getDefaultServiceType(),
