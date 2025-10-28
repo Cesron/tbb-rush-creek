@@ -21,7 +21,7 @@ async function generateDonationPDF(data: Donation) {
       const pageWidth: number = (
         doc as unknown as { internal: { pageSize: { getWidth: () => number } } }
       ).internal.pageSize.getWidth();
-      doc.setFontSize(11).setFont("helvetica", "bold");
+      doc.setFontSize(13).setFont("helvetica", "bold");
       doc.text(headerText, pageWidth / 2, 12, { align: "center" });
       doc
         .setDrawColor(0, 0, 0)
@@ -34,10 +34,10 @@ async function generateDonationPDF(data: Donation) {
     let yPosition = 22;
 
     // Información del Servicio
-    doc.setFontSize(10).setTextColor(40, 40, 40).setFont("helvetica", "bold");
+    doc.setFontSize(12).setTextColor(40, 40, 40).setFont("helvetica", "bold");
     doc.text("Información del Servicio", 20, yPosition);
     yPosition += 6; // reduced space after service info section
-    doc.setFontSize(9).setTextColor(60, 60, 60).setFont("helvetica", "normal");
+    doc.setFontSize(10).setTextColor(60, 60, 60).setFont("helvetica", "normal");
 
     const col1LabelX = 20;
     const col1ValueX = 40;
@@ -78,7 +78,7 @@ async function generateDonationPDF(data: Donation) {
     yPosition += 4;
 
     // Asistencia y Actividades Ministeriales
-    doc.setFontSize(10).setFont("helvetica", "bold").setTextColor(40, 40, 40);
+    doc.setFontSize(12).setFont("helvetica", "bold").setTextColor(40, 40, 40);
     doc.text("Resumen del Servicio", 20, yPosition);
     yPosition += 4;
     const childrenAttendance = parseInt(data.childrenAttendance || "0");
@@ -122,12 +122,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 10,
+        fontSize: 11,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 9,
+        fontSize: 10,
         cellPadding: 2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -167,12 +167,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 10,
+        fontSize: 11,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 9,
+        fontSize: 10,
         cellPadding: 2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -198,7 +198,7 @@ async function generateDonationPDF(data: Donation) {
 
     // Desglose de Efectivo (dos tablas lado a lado)
     doc
-      .setFontSize(10)
+      .setFontSize(12)
       .setFont("helvetica", "bold")
       .text("Desglose de Efectivo", 20, yPosition);
     yPosition += 4;
@@ -261,12 +261,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 10,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 8,
+        fontSize: 9,
         cellPadding: 1.2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -301,12 +301,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 10,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 8,
+        fontSize: 9,
         cellPadding: 1.2,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -364,7 +364,7 @@ async function generateDonationPDF(data: Donation) {
     );
     const totalFinancial = totalTithes + totalOfferings + totalOtherDonations;
     doc
-      .setFontSize(10)
+      .setFontSize(12)
       .setFont("helvetica", "bold")
       .text("Totales Financieros", 20, yPosition);
     yPosition += 4;
@@ -401,12 +401,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 10,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 8,
+        fontSize: 9,
         cellPadding: 1.5,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -446,12 +446,12 @@ async function generateDonationPDF(data: Donation) {
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: [0, 0, 0],
-        fontSize: 9,
+        fontSize: 10,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
       },
       styles: {
-        fontSize: 8,
+        fontSize: 9,
         cellPadding: 1.5,
         lineColor: [0, 0, 0],
         lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
@@ -482,13 +482,13 @@ async function generateDonationPDF(data: Donation) {
 
     // Firmas (primera página)
     doc
-      .setFontSize(10)
+      .setFontSize(12)
       .setFont("helvetica", "bold")
       .setTextColor(40, 40, 40)
       .text("Firmas de los Servidores", 20, yPosition);
     yPosition += 4; // reduced space under section title
     doc
-      .setFontSize(8.5)
+      .setFontSize(10)
       .text("NOMBRE", 25, yPosition)
       .text("FIRMA", 120, yPosition);
     yPosition += 5; // reduced gap so first line leaves room for handwriting
@@ -502,7 +502,7 @@ async function generateDonationPDF(data: Donation) {
     // Supervisor label and line aligned on same baseline
     doc
       .setFont("helvetica", "bold")
-      .setFontSize(8.5)
+      .setFontSize(10)
       .text("SUPERVISOR", 20, yPosition);
     const supervisorLineY = yPosition + 1.5; // a bit below label for clarity
     doc.line(45, supervisorLineY, 190, supervisorLineY);
@@ -524,7 +524,7 @@ async function generateDonationPDF(data: Donation) {
     ) => {
       if (!rows || rows.length === 0) return;
       doc
-        .setFontSize(10)
+        .setFontSize(12)
         .setFont("helvetica", "bold")
         .text(title, 20, yPosition);
       yPosition += 4;
@@ -541,13 +541,13 @@ async function generateDonationPDF(data: Donation) {
         headStyles: {
           fillColor: [220, 220, 220],
           textColor: [0, 0, 0],
-          fontSize: 10,
+          fontSize: 11,
           lineColor: [0, 0, 0],
           lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },
         },
         margin: { left: 20, right: 20 },
         styles: {
-          fontSize: 9,
+          fontSize: 10,
           cellPadding: 2,
           lineColor: [0, 0, 0],
           lineWidth: { top: 0, bottom: 0.1, left: 0, right: 0 },

@@ -16,6 +16,7 @@ import { UseFormReturn } from "react-hook-form";
 import { Donation } from "../_lib/donations-schema";
 import { AddOtherDonationDialog } from "./add-other-donation-dialog";
 import { EditOtherDonationDialog } from "./edit-other-donation-dialog";
+import { Badge } from "@/components/ui/badge";
 
 interface OtherDonationsDetailSectionProps {
   form: UseFormReturn<Donation>;
@@ -71,17 +72,18 @@ export function OtherDonationsDetailSection({
                 <TableRow key={index}>
                   <TableCell className="font-medium">{donation.name}</TableCell>
                   <TableCell>
-                    <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize ${
+                    <Badge
+                      variant={
                         donation.type === "efectivo"
-                          ? "bg-green-100 text-green-800"
+                          ? "green-subtle"
                           : donation.type === "remesa"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-purple-100 text-purple-800"
-                      }`}
+                          ? "blue-subtle"
+                          : "purple-subtle"
+                      }
                     >
-                      {donation.type}
-                    </span>
+                      {donation.type.charAt(0).toUpperCase() +
+                        donation.type.slice(1)}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right font-mono">
                     {currencyFormat(parseFloat(donation.amount) || 0)}

@@ -3,6 +3,14 @@ import { Donation, donationSchema } from "../_lib/donations-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { generatePdfAction } from "../_actions/generate-pdf";
 
+function getLocalDateString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function getDefaultServiceType(): string {
   const now = new Date();
   const dayOfWeek = now.getDay();
@@ -32,7 +40,7 @@ export function useRegisterDonation() {
   const form = useForm<Donation>({
     resolver: zodResolver(donationSchema),
     defaultValues: {
-      serviceDate: new Date().toLocaleDateString(),
+      serviceDate: getLocalDateString(),
       sermonTopic: "",
       preacher: "",
       serviceType: getDefaultServiceType(),

@@ -10,10 +10,10 @@ import { Separator } from "@/components/ui/separator";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { verifySession } from "@/lib/auth-utils";
+// import { verifySession } from "@/lib/auth-utils";
 
 export default async function Home() {
-  const session = await verifySession();
+  // const session =  await verifySession();
 
   return (
     <>
@@ -43,9 +43,9 @@ export default async function Home() {
       </header>
       <div className="overflow-hidden">
         <div className="grid auto-rows-min @2xl:grid-cols-2 *:-ms-px *:-mt-px -m-px">
-          <pre>
+          {/* <pre>
             <code>{JSON.stringify(session, null, 2)}</code>
-          </pre>
+          </pre> */}
         </div>
       </div>
     </>

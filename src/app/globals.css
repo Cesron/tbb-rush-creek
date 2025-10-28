@@ -73,12 +73,12 @@
   --chart-4: oklch(0.645 0.246 16.439);
   --chart-5: oklch(0.586 0.253 17.585);
   --chart-6: oklch(0.696 0.17 162.48);
-  --green-subtle: oklch(0.95 0.05 142);
-  --green-subtle-foreground: oklch(0.25 0.15 142);
-  --blue-subtle: oklch(0.95 0.05 232);
-  --blue-subtle-foreground: oklch(0.25 0.15 232);
-  --purple-subtle: oklch(0.95 0.05 290);
-  --purple-subtle-foreground: oklch(0.25 0.15 290);
+  --green-subtle: oklch(0.962 0.044 156.743);
+  --green-subtle-foreground: oklch(0.448 0.119 151.328);
+  --blue-subtle: oklch(0.932 0.032 255.585);
+  --blue-subtle-foreground: oklch(0.424 0.199 265.638);
+  --purple-subtle: oklch(0.946 0.033 307.174);
+  --purple-subtle-foreground: oklch(0.438 0.218 303.724);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.37 0.013 285.805);
